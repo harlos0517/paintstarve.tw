@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Build output
+.next/
+dist/
+
+# TypeScript
+*.tsbuildinfo
+
+# Environment variables — 只保留 .env.example
+.env
+.env.*
+!.env.example
+
+# Payload CMS
+.payload/
+public/media/
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+
+# Turbopack cache
+.turbo/
