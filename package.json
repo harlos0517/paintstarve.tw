@@ -7,38 +7,33 @@
   "author": "Harlos <murataharu0517@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint .",
-    "generate:types": "payload generate:types",
-    "generate:importmap": "payload generate:importMap"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint ."
   },
   "dependencies": {
     "@mantine/core": "^9.3.2",
     "@mantine/hooks": "^9.3.2",
-    "@payloadcms/db-postgres": "^3.85.1",
-    "@payloadcms/next": "^3.85.1",
-    "next": "^16.2.9",
-    "papaparse": "^5.5.4",
-    "payload": "^3.85.1",
+    "axios": "^1.18.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
+    "react-router-dom": "^7.18.0",
     "sass-embedded": "^1.100.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/node": "^24.13.2",
-    "@types/papaparse": "^5.5.2",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^6.0.2",
+    "@vitejs/plugin-react": "^4.7.0",
     "eslint": "^10.5.0",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.3",
     "globals": "^17.6.0",
     "typescript": "~6.0.3",
-    "typescript-eslint": "^8.61.1"
+    "typescript-eslint": "^8.61.1",
+    "vite": "^6.4.3"
   },
   "engines": {
     "node": ">=24"

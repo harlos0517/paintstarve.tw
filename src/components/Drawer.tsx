@@ -1,9 +1,7 @@
-'use client'
-
-import { Tabs } from '@mantine/core'
-import { usePathname, useRouter } from 'next/navigation'
-import React, { memo } from 'react'
 import { routes } from '@/lib/routes'
+import { Tabs } from '@mantine/core'
+import React, { memo } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 import styles from './Drawer.module.sass'
 
@@ -13,16 +11,16 @@ type DrawerProps = {
 }
 
 const Drawer: React.FC<DrawerProps> = ({ toggle }) => {
-  const router = useRouter()
-  const currentPath = usePathname()
-  const currentRoute = routes.find(route => currentPath === route.path)
+  const navigate = useNavigate()
+  const { pathname } = useLocation()
+  const currentRoute = routes.find(route => pathname === route.path)
 
   return <Tabs
     className={styles['drawer']}
     value={currentRoute?.key}
     onChange={value => {
       toggle?.()
-      router.push(routes.find(r => r.key === value)?.path ?? '/')
+      navigate(routes.find(r => r.key === value)?.path ?? '/')
     }}
     orientation="vertical"
     px="md"

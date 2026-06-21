@@ -1,5 +1,3 @@
-'use client'
-
 import { AppShell, Box, Container } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import Drawer from './Drawer'

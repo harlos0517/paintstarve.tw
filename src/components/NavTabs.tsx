@@ -1,8 +1,5 @@
-'use client'
-
 import { Burger, Center, Overlay, Space, Tabs, Title } from '@mantine/core'
-import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import React, { memo, useEffect, useState } from 'react'
 import { routes } from '@/lib/routes'
 
@@ -15,9 +12,9 @@ type NavTabsProps = {
 }
 
 const NavTabs: React.FC<NavTabsProps> = ({ opened, toggle, close }) => {
-  const router = useRouter()
-  const currentPath = usePathname()
-  const currentRoute = routes.find(route => currentPath === route.path)
+  const navigate = useNavigate()
+  const { pathname } = useLocation()
+  const currentRoute = routes.find(route => pathname === route.path)
 
   const [hide, setHide] = useState(false)
   const hideTimeout = React.useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -49,7 +46,7 @@ const NavTabs: React.FC<NavTabsProps> = ({ opened, toggle, close }) => {
   return <Tabs
     className={styles['nav-tabs']}
     value={currentRoute?.key}
-    onChange={value => router.push(routes.find(r => r.key === value)?.path ?? '/')}
+    onChange={value => navigate(routes.find(r => r.key === value)?.path ?? '/')}
     h="100%"
     pos="sticky"
     top={0}
@@ -68,7 +65,7 @@ const NavTabs: React.FC<NavTabsProps> = ({ opened, toggle, close }) => {
       <Center h="100%" px="xl" py="lg">
         <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" p={0} flex={1} />
         <Title order={2} px="lg">
-          <Link href="/" onClick={close}>HOME</Link>
+          <Link to="/" onClick={close}>HOME</Link>
         </Title>
         <Space flex="1 0 0" />
         <Tabs.List
