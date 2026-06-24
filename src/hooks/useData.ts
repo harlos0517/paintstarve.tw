@@ -5,16 +5,18 @@ import { DataTypeMap, Sheet } from '@/api/types'
 
 const useData = <Name extends Sheet>(table: Name) => {
   const [data, setData] = useState<DataTypeMap[Name][]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     getData(table).then(responseData => {
       if (!responseData) console.error(`No data found for table: ${table}`)
       if (!Array.isArray(responseData)) console.error(`Data for table ${table} is not an array`)
       setData(responseData)
+      setLoading(false)
     })
   }, [table])
 
-  return data
+  return { data, loading }
 }
 
 export default useData

@@ -1,9 +1,11 @@
-import { Burger, Center, Overlay, Space, Tabs, Title } from '@mantine/core'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
-import React, { memo, useEffect, useState } from 'react'
 import { routes } from '@/lib/routes'
+import { Burger, Center, Group, Image, Overlay, Space, Tabs, Title } from '@mantine/core'
+import React, { memo, useEffect, useState } from 'react'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 
 import styles from './NavTabs.module.sass'
+
+import Logo from '@/assets/images/school_logo.png'
 
 type NavTabsProps = {
   opened?: boolean
@@ -64,16 +66,21 @@ const NavTabs: React.FC<NavTabsProps> = ({ opened, toggle, close }) => {
     >
       <Center h="100%" px="xl" py="lg">
         <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" p={0} flex={1} />
-        <Title order={2} px="lg">
-          <Link to="/" onClick={close}>HOME</Link>
-        </Title>
+        <NavLink to="/" onClick={close}>
+          <Group gap="sm">
+            <Image src={Logo} alt="繪俄史高等藝術學院" w="60px" />
+            <Title order={2} px="lg">
+              繪俄史高等藝術學院
+            </Title>
+          </Group>
+        </NavLink>
         <Space flex="1 0 0" />
         <Tabs.List
           display="flex"
           visibleFrom="sm"
           style={{ alignItems: 'center' }}
         >
-          {routes.filter(r => r.path !== '/').map(route =>
+          {routes.filter(r => r.path !== '/' && (r.showInNav ?? true)).map(route =>
             <Tabs.Tab key={route.key} value={route.key}>
               {route.name}
             </Tabs.Tab>,

@@ -11,7 +11,7 @@ const router = (children?: React.ReactNode) => createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={children}>
       {routes.map(route => <Route
-        key={route.name}
+        key={route.key ?? route.path}
         path={route.path}
         element={route.component}
       />)}

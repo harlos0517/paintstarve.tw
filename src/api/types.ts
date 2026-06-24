@@ -1,15 +1,17 @@
-export interface Students {
+export interface Student {
+  id: string
   name: string
   nameEn: string
   studentId: string
-  year: number
-  class: string
-  gender: string
+  year: number // 1 - 3
+  class: string // A - G
   race: string
   major: string
-  seatRow: number
-  seatColumn: number
-  description: string
+  seatRow: number // 1 - 8
+  seatColumn: number // 1 - 5
+  description: string // multiline
+  twitter: string
+  idCardImageUrl: string
 }
 
 export enum Sheet {
@@ -17,5 +19,5 @@ export enum Sheet {
 }
 
 export interface DataTypeMap {
-  [Sheet.STUDENTS]: Students
+  [Sheet.STUDENTS]: Student
 }

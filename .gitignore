@@ -31,3 +31,5 @@ Thumbs.db
 
 # Turbopack cache
 .turbo/
+
+data/

@@ -1,4 +1,4 @@
-import { AppShell, Box, Container } from '@mantine/core'
+import { AppShell, Box } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import Drawer from './Drawer'
 import NavTabs from './NavTabs'
@@ -35,9 +35,7 @@ export default function FrontendShell({ children }: { children: React.ReactNode 
         h="100lvh"
       >
         <Box pt="md" pb="60px">
-          <Container>
-            {children}
-          </Container>
+          {children}
         </Box>
       </AppShell.Main>
     </AppShell>
