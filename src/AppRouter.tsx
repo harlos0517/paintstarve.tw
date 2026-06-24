@@ -1,5 +1,5 @@
 import {
-  createBrowserRouter,
+  createHashRouter,
   createRoutesFromElements,
   Route,
   RouterProvider,
@@ -7,7 +7,7 @@ import {
 
 import { routes } from '@/lib/routes'
 
-const router = (children?: React.ReactNode) => createBrowserRouter(
+const router = (children?: React.ReactNode) => createHashRouter(
   createRoutesFromElements(
     <Route path="/" element={children}>
       {routes.map(route => <Route

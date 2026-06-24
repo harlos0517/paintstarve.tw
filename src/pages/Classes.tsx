@@ -1,20 +1,23 @@
 import { Button, Container, Group, Stack } from '@mantine/core'
 
 import { classes, getColor, getName, getPath, YEARS } from '@/lib/classes'
+import { NavLink } from 'react-router-dom'
 
 const Classes = () => {
   const classButtons = YEARS.map(year => {
     const buttons = classes
       .filter(c => c.year === year)
       .map(classInfo => (
-        <Button
+        <NavLink
           key={getName(classInfo.year, classInfo.class)}
-          component="a"
-          href={getPath(classInfo.year, classInfo.class)}
-          color={getColor(classInfo.year)}
+          to={getPath(classInfo.year, classInfo.class)}
         >
-          {getName(classInfo.year, classInfo.class)}
-        </Button>
+          <Button
+            color={getColor(classInfo.year)}
+          >
+            {getName(classInfo.year, classInfo.class)}
+          </Button>
+        </NavLink>
       ))
     return <Group key={year}>{buttons}</Group>
   })
