@@ -1,12 +1,14 @@
-import { AppShell, Box } from '@mantine/core'
+import { Affix, AppShell, Box, Button } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
+import { InfoIcon } from '@phosphor-icons/react'
+
 import Drawer from './Drawer'
 import NavTabs from './NavTabs'
 
 export default function FrontendShell({ children }: { children: React.ReactNode }) {
   const [opened, { toggle, close }] = useDisclosure()
 
-  return (
+  return <>
     <AppShell
       header={{ height: 80, offset: true }}
       navbar={{
@@ -39,5 +41,16 @@ export default function FrontendShell({ children }: { children: React.ReactNode 
         </Box>
       </AppShell.Main>
     </AppShell>
-  )
+    <Affix position={{ bottom: 20, right: 20 }}>
+      <Button leftSection={<InfoIcon size={16} />}
+        component="a"
+        // eslint-disable-next-line @stylistic/max-len
+        href="https://docs.google.com/spreadsheets/d/1NoDDabdgnrLfWssHF46YUyUwAyNMMQGsVPBCjk5_Iog/edit?usp=sharing"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        回報資料錯誤缺失
+      </Button>
+    </Affix>
+  </>
 }
