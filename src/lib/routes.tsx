@@ -1,6 +1,7 @@
 import Classes from '@/pages/Classes'
 import Clazz from '@/pages/Clazz'
 import Students from '@/pages/Students'
+import { Navigate } from 'react-router-dom'
 
 export type Route = {
   key: string
@@ -12,7 +13,7 @@ export type Route = {
 }
 
 export const routes: Route[] = [
-  { key: 'home', name: '首頁', path: '/', component: <></> },
+  { key: 'home', name: '首頁', path: '/', component: <Navigate to="/students" replace /> },
   { key: 'intro', name: '簡介', path: '/intro', component: <></> },
   { key: 'teachers', name: '師資', path: '/teachers', component: <></> },
   { key: 'students', name: '學生', path: '/students', component: <Students /> },

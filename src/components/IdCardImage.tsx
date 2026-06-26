@@ -1,36 +1,37 @@
-import { Box, Image } from '@mantine/core'
+import { Center, Image } from '@mantine/core'
 
 import BlankIdCardImage from '@/assets/images/blank_id_card.png'
 
 export interface IdCardImageProps {
   src?: string
   alt?: string
-  brds: number | string
+  size?: number
+  bdrs: number | string
 }
 
 export const IdCardImage = (props: IdCardImageProps) => {
-  const { src = BlankIdCardImage, alt, brds } = props
+  const { src = BlankIdCardImage, alt, bdrs, size = 12 } = props
 
   const headBoxRatio = 666 / 545
-  const scale = 1.53
+  const scale = 1.55
 
-  return <Box
-    w={`calc(10rem / ${headBoxRatio})`}
-    h="10rem"
+  return <Center
+    w={`calc(${size}rem / ${headBoxRatio})`}
+    h={`${size}rem`}
     style={{ overflow: 'hidden' }}
     pos="relative"
-    bdrs={brds}
+    bdrs={bdrs}
   >
     {src &&
       <Image
         pos="absolute"
-        style={{ top: '-1.1rem', left: '-2.2rem' }}
-        h={`calc(10rem * ${scale})`}
-        w={`calc(10rem * ${scale} / ${headBoxRatio})`}
+        style={{ top: `calc(-0.11rem * ${size})` }}
+        h={`calc(${size}rem * ${scale})`}
+        w={`calc(${size}rem * ${scale} / ${headBoxRatio})`}
         src={src}
         fallbackSrc={BlankIdCardImage}
         alt={alt || 'ID Card'}
       />
     }
-  </Box>
+  </Center>
 }

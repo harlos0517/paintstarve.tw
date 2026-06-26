@@ -1,6 +1,6 @@
 import { routes } from '@/lib/routes'
 import { Burger, Center, Group, Image, Overlay, Space, Tabs, Title } from '@mantine/core'
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo } from 'react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 
 import styles from './NavTabs.module.sass'
@@ -18,33 +18,6 @@ const NavTabs: React.FC<NavTabsProps> = ({ opened, toggle, close }) => {
   const { pathname } = useLocation()
   const currentRoute = routes.find(route => pathname === route.path)
 
-  const [hide, setHide] = useState(false)
-  const hideTimeout = React.useRef<ReturnType<typeof setTimeout> | null>(null)
-  const trigger = () => {
-    if (hideTimeout.current) {
-      clearTimeout(hideTimeout.current)
-      hideTimeout.current = null
-    }
-    setHide(false)
-    hideTimeout.current = setTimeout(() => {
-      setHide(true)
-    }, 2000)
-  }
-
-  useEffect(() => {
-    hideTimeout.current = setTimeout(() => {
-      setHide(true)
-    }, 2000)
-    window.addEventListener('touchstart', trigger)
-    return () => {
-      window.removeEventListener('touchstart', trigger)
-      if (hideTimeout.current) {
-        clearTimeout(hideTimeout.current)
-        hideTimeout.current = null
-      }
-    }
-  }, [])
-
   return <Tabs
     className={styles['nav-tabs']}
     value={currentRoute?.key}
@@ -53,8 +26,7 @@ const NavTabs: React.FC<NavTabsProps> = ({ opened, toggle, close }) => {
     pos="sticky"
     top={0}
     style={{ zIndex: 1000, transition: 'opacity 0.2s ease-in-out' }}
-    opacity={hide && !opened ? 0 : 1}
-    onMouseMove={trigger}
+    opacity={1}
   >
     <Overlay
       color="#362f36"

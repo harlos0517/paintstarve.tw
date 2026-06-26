@@ -49,7 +49,7 @@ const Students = () => {
     (currentPage - 1) * pageSize, currentPage * pageSize,
   )
 
-  return <Container p="md" size="1200px">
+  return <Container p="md" size="1440px">
     <Stack>
       <Group justify="space-between" w="100%" mb={5} >
         <Title order={2}>學生檔案</Title>
