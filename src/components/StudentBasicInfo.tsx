@@ -10,7 +10,7 @@ const StudentBasicInfo = (props: StudentBasicInfoProps) => {
   const {
     name,
     nameEn,
-    studentId,
+    cardId: studentId,
     year,
     class: studentClass,
     seatRow,

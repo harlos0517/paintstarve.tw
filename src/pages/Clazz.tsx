@@ -72,7 +72,7 @@ const Clazz = () => {
         return COLS.map(column => {
           const student = classStudents.find(s => s.seatRow === row && s.seatColumn === column)
           return <Seat
-            key={student?.id || `${fullClassCode}0${row}0${column}`}
+            key={student?.seatId || `${fullClassCode}0${row}0${column}`}
             student={student}
           />
         })

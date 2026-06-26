@@ -149,7 +149,7 @@ const Students = () => {
       </Group>
       <SimpleGrid cols={{ xs: 1, sm: 2, lg: 3 }} spacing="md">
         {paginatedStudents.map(student =>
-          <StudentListCard key={student.id} {...student} />,
+          <StudentListCard key={student.seatId} {...student} />,
         )}
       </SimpleGrid>
       <Pagination value={currentPage} onChange={setCurrentPage} total={totalPages} />

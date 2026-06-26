@@ -1,8 +1,11 @@
 export interface Student {
-  id: string
+  uid: string
+  season: number
+  seatId: string
+  participantType: string
   name: string
   nameEn: string
-  studentId: string
+  cardId: string
   year: number // 1 - 3
   class: string // A - G
   seatRow: number // 1 - 8
@@ -13,6 +16,7 @@ export interface Student {
   description: string // multiline
   twitter: string
   idCardImageUrl: string
+  verified: boolean
 }
 
 export enum Sheet {

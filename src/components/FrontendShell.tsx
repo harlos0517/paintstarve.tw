@@ -44,8 +44,7 @@ export default function FrontendShell({ children }: { children: React.ReactNode 
     <Affix position={{ bottom: 20, right: 20 }}>
       <Button leftSection={<InfoIcon size={16} />}
         component="a"
-        // eslint-disable-next-line @stylistic/max-len
-        href="https://docs.google.com/spreadsheets/d/1NoDDabdgnrLfWssHF46YUyUwAyNMMQGsVPBCjk5_Iog/edit?usp=sharing"
+        href="https://forms.gle/Tbuqq6wi9Bcuj1Q3A"
         target="_blank"
         rel="noopener noreferrer"
       >
