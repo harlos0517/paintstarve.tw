@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Checkbox,
   Collapse,
   Container,
   Group,
@@ -30,6 +31,8 @@ const Students = () => {
   const [columnFilter, setColumnFilter] = useState<string[]>([])
   const [raceFilter, setRaceFilter] = useState('')
   const [majorFilter, setMajorFilter] = useState('')
+  const [birthdayTodayFilter, setBirthdayFilter] = useState(false)
+  const [verifiedFilter, setVerifiedFilter] = useState(false)
   const filteredStudents = allStudents
     .filter(s => s.name && s.name !== '#N/A')
     .filter(s => !nameFilter || s.name.includes(nameFilter) || s.nameEn?.includes(nameFilter))
@@ -39,6 +42,12 @@ const Students = () => {
     .filter(s => !columnFilter.length || columnFilter.includes(s.seatColumn.toString()))
     .filter(s => !raceFilter || s.race?.includes(raceFilter))
     .filter(s => !majorFilter || s.major?.includes(majorFilter))
+    .filter(s => {
+      const [mm, dd] = (s.birthday?.split('-').map(Number)) || []
+      return !birthdayTodayFilter ||
+        (mm === new Date().getMonth() + 1 && dd === new Date().getDate())
+    })
+    .filter(s => !verifiedFilter || s.verified)
 
   const sortedStudents = [...filteredStudents] // TODO: sorting
 
@@ -83,6 +92,24 @@ const Students = () => {
               setMajorFilter(event.currentTarget.value)
               setCurrentPage(1)
             }}
+          />
+          <Checkbox
+            label="今天生日"
+            checked={birthdayTodayFilter}
+            onChange={event => {
+              setBirthdayFilter(event.currentTarget.checked)
+              setCurrentPage(1)
+            }}
+            pt="1.5rem"
+          />
+          <Checkbox
+            label="已認證"
+            checked={verifiedFilter}
+            onChange={event => {
+              setVerifiedFilter(event.currentTarget.checked)
+              setCurrentPage(1)
+            }}
+            pt="1.5rem"
           />
         </Group>
         <Group wrap="nowrap" mt="sm">

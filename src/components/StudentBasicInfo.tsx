@@ -1,8 +1,10 @@
-import { Anchor, Text, Title } from '@mantine/core'
-import { TwitterLogoIcon } from '@phosphor-icons/react'
+import { Anchor, Image, Text, Title } from '@mantine/core'
+import { CakeIcon, TwitterLogoIcon } from '@phosphor-icons/react'
 
 import { Student } from '@/api/types'
 import { YEAR_MAP } from '@/lib/classes'
+
+import verifiedImage from '@/assets/images/verified.png'
 
 export type StudentBasicInfoProps = Student
 
@@ -19,14 +21,17 @@ const StudentBasicInfo = (props: StudentBasicInfoProps) => {
     major,
     birthday,
     twitter,
+    verified,
   } = props
 
   const [birthdayMonth, birthdayDay] = (birthday?.split('-').map(Number)) || []
+  const birthdayIsToday =
+    birthdayMonth === new Date().getMonth() + 1 && birthdayDay === new Date().getDate()
 
   return <>
     <Title order={3} mt="-0.4rem">
       {name}
-      <Anchor href={twitter} target="_blank" rel="noopener noreferrer">
+      {twitter && <Anchor href={twitter} target="_blank" rel="noopener noreferrer">
         <TwitterLogoIcon
           size="1.5rem"
           weight="fill"
@@ -38,7 +43,28 @@ const StudentBasicInfo = (props: StudentBasicInfoProps) => {
           }}
           color="#1DA1F2"
         />
-      </Anchor>
+      </Anchor>}
+      {verified && <Image
+        src={verifiedImage}
+        alt="已認證"
+        w="1.5rem" h="1.5rem"
+        display="inline"
+        style={{
+          marginLeft: '0.25rem',
+          position: 'relative',
+          top: '0.4rem',
+        }}
+      />}
+      {birthdayIsToday && <CakeIcon
+        size="1.5rem"
+        weight="fill"
+        style={{
+          marginLeft: '0.25rem',
+          position: 'relative',
+          top: '0.3rem',
+        }}
+        color="#FFFF88"
+      />}
     </Title>
     <Title order={6}>{nameEn}</Title>
     <Text c="dimmed" size="xs" ff="monospace">{studentId}</Text>
