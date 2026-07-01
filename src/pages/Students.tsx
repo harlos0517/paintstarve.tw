@@ -1,17 +1,17 @@
 import {
-    Box,
-    Button,
-    Checkbox,
-    Collapse,
-    Container,
-    Group,
-    MultiSelect,
-    Pagination,
-    Select,
-    SimpleGrid,
-    Stack,
-    TextInput,
-    Title,
+  Box,
+  Button,
+  Checkbox,
+  Collapse,
+  Container,
+  Group,
+  MultiSelect,
+  Pagination,
+  Select,
+  SimpleGrid,
+  Stack,
+  TextInput,
+  Title,
 } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { useContext, useState } from 'react'
@@ -24,6 +24,7 @@ const Students = () => {
 
   const [filterExpanded, { toggle: toggleFilter }] = useDisclosure(false)
 
+  const [roleFilter, setRoleFilter] = useState<string[]>([])
   const [nameFilter, setNameFilter] = useState('')
   const [yearFilter, setYearFilter] = useState<string[]>([])
   const [classFilter, setClassFilter] = useState<string[]>([])
@@ -34,6 +35,7 @@ const Students = () => {
   const [birthdayTodayFilter, setBirthdayFilter] = useState(false)
   const [verifiedFilter, setVerifiedFilter] = useState(false)
   const filteredStudents = allStudents
+    .filter(s => !roleFilter.length || roleFilter.includes(s.role))
     .filter(s => s.name && s.name !== '#N/A')
     .filter(s => !nameFilter || s.name.includes(nameFilter) || s.nameEn?.includes(nameFilter))
     .filter(s => !yearFilter.length || yearFilter.includes(s.year.toString()))
@@ -113,6 +115,19 @@ const Students = () => {
           />
         </Group>
         <Group wrap="nowrap" mt="sm">
+          <MultiSelect
+            flex="1"
+            label="角色"
+            value={roleFilter}
+            onChange={v => {
+              setRoleFilter(v)
+              setCurrentPage(1)
+            }}
+            data={[
+              { value: 'student', label: '學生' },
+              { value: 'staff', label: '教職員' },
+            ]}
+          />
           <MultiSelect
             flex="1"
             label="年級"
