@@ -4,14 +4,14 @@ import { ArrowLeftIcon } from '@phosphor-icons/react'
 import { useContext, useState } from 'react'
 import { NavLink, useParams } from 'react-router-dom'
 
-import { Student } from '@/api/types'
+import { Participant } from '@/api/types'
 import GlobalContext from '@/components/GlobalContext'
 import { IdCardImage } from '@/components/IdCardImage'
-import StudentInfoCard from '@/components/StudentInfoCard'
+import ParticipantInfoCard from '@/components/ParticipantInfoCard'
 import { COLS, getClass, ROWS, YEAR_MAP } from '@/lib/classes'
 
 type SeatProps = {
-  student?: Student
+  student?: Participant
 }
 
 const Seat = ({ student }: SeatProps) => {
@@ -39,7 +39,7 @@ const Seat = ({ student }: SeatProps) => {
         {student?.name || '空位'}
       </Title>
     </Stack>
-    {showDetail && student && <StudentInfoCard {...student} setShowDetail={setShowDetail} />}
+    {showDetail && student && <ParticipantInfoCard {...student} setShowDetail={setShowDetail} />}
   </>
 }
 

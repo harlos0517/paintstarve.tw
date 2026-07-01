@@ -1,23 +1,23 @@
 import {
-  Box,
-  Button,
-  Checkbox,
-  Collapse,
-  Container,
-  Group,
-  MultiSelect,
-  Pagination,
-  Select,
-  SimpleGrid,
-  Stack,
-  TextInput,
-  Title,
+    Box,
+    Button,
+    Checkbox,
+    Collapse,
+    Container,
+    Group,
+    MultiSelect,
+    Pagination,
+    Select,
+    SimpleGrid,
+    Stack,
+    TextInput,
+    Title,
 } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import { useContext, useState } from 'react'
 
 import GlobalContext from '@/components/GlobalContext'
-import StudentListCard from '@/components/StudentListCard'
+import ParticipantListCard from '@/components/ParticipantListCard'
 
 const Students = () => {
   const { students: allStudents } = useContext(GlobalContext)
@@ -176,7 +176,7 @@ const Students = () => {
       </Group>
       <SimpleGrid cols={{ xs: 1, sm: 2, lg: 3 }} spacing="md">
         {paginatedStudents.map(student =>
-          <StudentListCard key={student.seatId} {...student} />,
+          <ParticipantListCard key={student.seatId} {...student} />,
         )}
       </SimpleGrid>
       <Pagination value={currentPage} onChange={setCurrentPage} total={totalPages} />

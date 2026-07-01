@@ -1,8 +1,8 @@
-export interface Student {
+export interface Participant {
   uid: string
   season: number
   seatId: string
-  participantType: string
+  role: string
   name: string
   nameEn: string
   cardId: string
@@ -10,6 +10,8 @@ export interface Student {
   class: string // A - G
   seatRow: number // 1 - 8
   seatColumn: number // 1 - 5
+  title: string
+  unit: string
   race: string
   major: string
   birthday: string // MM-DD
@@ -20,9 +22,9 @@ export interface Student {
 }
 
 export enum Sheet {
-  STUDENTS = 'STUDENTS',
+  PARTICIPANTS = 'STUDENTS',
 }
 
 export interface DataTypeMap {
-  [Sheet.STUDENTS]: Student
+  [Sheet.PARTICIPANTS]: Participant
 }

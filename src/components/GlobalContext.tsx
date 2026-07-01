@@ -1,9 +1,9 @@
 import { createContext } from 'react'
 
-import { Student } from '@/api/types'
+import { Participant } from '@/api/types'
 
 interface GlobalContextProps {
-  students: Student[]
+  students: Participant[]
 }
 
 const GlobalContext = createContext<GlobalContextProps>({

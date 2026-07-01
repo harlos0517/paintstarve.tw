@@ -1,20 +1,26 @@
 import { Box, Card } from '@mantine/core'
 import { useState } from 'react'
 
-import { Student } from '@/api/types'
+import { Participant } from '@/api/types'
 import { IdCardImage } from '@/components/IdCardImage'
+import ParticipantInfoCard from '@/components/ParticipantInfoCard'
+import StaffBasicInfo from '@/components/StaffBasicInfo'
 import StudentBasicInfo from '@/components/StudentBasicInfo'
-import StudentInfoCard from '@/components/StudentInfoCard'
 
-export type StudentListCardProps = Student
+export type ParticipantListCardProps = Participant
 
-const StudentListCard = (props: StudentListCardProps) => {
+const ParticipantListCard = (props: ParticipantListCardProps) => {
   const {
+    role,
     name,
     idCardImageUrl,
   } = props
 
   const [showDetail, setShowDetail] = useState(false)
+
+  const basicInfo = role === 'student'
+    ? <StudentBasicInfo {...props} />
+    : <StaffBasicInfo {...props} />
 
   return <Box>
     <Card
@@ -28,11 +34,11 @@ const StudentListCard = (props: StudentListCardProps) => {
     >
       <Card.Section><IdCardImage src={idCardImageUrl} bdrs="0" alt={name} /></Card.Section>
       <Card.Section p="sm" h="12rem" style={{ overflow: 'auto' }} flex="1">
-        <StudentBasicInfo {...props} />
+        {basicInfo}
       </Card.Section>
     </Card>
-    {showDetail && <StudentInfoCard {...props} setShowDetail={setShowDetail} />}
+    {showDetail && <ParticipantInfoCard {...props} setShowDetail={setShowDetail} />}
   </Box>
 }
 
-export default StudentListCard
+export default ParticipantListCard

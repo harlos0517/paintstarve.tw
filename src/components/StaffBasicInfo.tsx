@@ -15,8 +15,8 @@ const StudentBasicInfo = (props: StudentBasicInfoProps) => {
     cardId: studentId,
     year,
     class: studentClass,
-    seatRow,
-    seatColumn,
+    title,
+    unit,
     race,
     major,
     birthday,
@@ -68,9 +68,13 @@ const StudentBasicInfo = (props: StudentBasicInfoProps) => {
     </Title>
     <Title order={6}>{nameEn}</Title>
     <Text c="dimmed" size="xs" ff="monospace">{studentId}</Text>
-    <Text size="sm">{YEAR_MAP[year]}年 {studentClass} 班 - {seatRow} 排 {seatColumn} 號</Text>
+    <Text size="sm"></Text>
+    {unit && <Text size="sm">單位：{unit}</Text>}
+    {title && <Text size="sm">
+      {year && <>{YEAR_MAP[year]}年 {studentClass} 班</>}
+      {title}</Text>}
+    {major && <Text size="sm">{major}</Text>}
     {race && <Text size="sm">種族：{race}</Text>}
-    {major && <Text size="sm">主修：{major}</Text>}
     {birthday && <Text size="sm">生日：{birthdayMonth} 月 {birthdayDay} 日</Text>}
   </>
 }

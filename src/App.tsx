@@ -11,7 +11,7 @@ import '@mantine/core/styles.css'
 import './styles/main.sass'
 
 export const App = () => {
-  const { data: students } = useData(Sheet.STUDENTS)
+  const { data: students } = useData(Sheet.PARTICIPANTS)
 
   return <MantineClientProvider>
     <AppRouter>
