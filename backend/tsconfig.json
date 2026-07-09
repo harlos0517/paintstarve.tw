@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "bundler",
+    "module": "es2022",
+    "types": [
+      "node"
+    ],
+    "declaration": true,
+    "verbatimModuleSyntax": true,
+    "skipLibCheck": true
+  }
+}

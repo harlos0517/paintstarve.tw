@@ -3,10 +3,10 @@ import axios from 'axios'
 
 import { DataTypeMap, Sheet } from '@/api/types'
 
-const API_URL = import.meta.env.VITE_API_URL
+const API_URL = import.meta.env.VITE_SPREADSHEET_URL
 const SPREADSHEET_ID = import.meta.env.VITE_SPREADSHEET_ID
 
-if (!API_URL) throw new Error('VITE_API_URL missing.')
+if (!API_URL) throw new Error('VITE_SPREADSHEET_URL missing.')
 if (!SPREADSHEET_ID) throw new Error('VITE_SPREADSHEET_ID missing.')
 
 const api = axios.create({

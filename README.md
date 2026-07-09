@@ -20,7 +20,7 @@
 
 - **前台**（本 repo）：純 SPA，打包後部署為靜態檔案
 - **資料伺服器**（Linode）：從 Google Spreadsheet 同步資料，提供 REST API
-- 前台透過 `VITE_API_URL` 呼叫資料伺服器取得最新資料，無資料庫依賴
+- 前台透過 `VITE_SPREADSHEET_URL` 呼叫資料伺服器取得最新資料，無資料庫依賴
 
 ## 專案結構
 
@@ -56,7 +56,7 @@ vite.config.ts             # Vite 設定（@ alias，build outDir: ../docs）
 複製 `.env.example` 為 `.env` 並填入：
 
 ```env
-VITE_API_URL=https://your-linode-server.example.com
+VITE_SPREADSHEET_URL=https://your-linode-server.example.com
 VITE_SPREADSHEET_ID=your-google-spreadsheet-id
 ```
 

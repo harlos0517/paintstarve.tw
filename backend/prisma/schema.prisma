@@ -1,0 +1,180 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum UserVerifiedStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+model User {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name          String
+  email         String             @unique
+  image         String?
+  emailVerified Boolean
+  role          UserRole           @default(USER)
+  verifyStatus  UserVerifiedStatus @default(PENDING)
+
+  characters     Character[]
+  uploadedImages Image[]     @relation("UserUploadedImages")
+  works          Work[]
+
+  // Better Auth required relations
+  sessions Session[]
+  accounts Account[]
+}
+
+// Better Auth required table
+model Session {
+  id        String   @id
+  createdAt DateTime @db.Timestamptz(3)
+  updatedAt DateTime @db.Timestamptz(3)
+
+  userId    String
+  token     String   @unique
+  expiresAt DateTime @db.Timestamptz(3)
+  ipAddress String?
+  userAgent String?
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("session")
+}
+
+// Better Auth required table
+model Account {
+  id        String   @id
+  createdAt DateTime @db.Timestamptz(3)
+  updatedAt DateTime @db.Timestamptz(3)
+
+  userId                String
+  accountId             String
+  providerId            String
+  accessToken           String?
+  refreshToken          String?
+  accessTokenExpiresAt  DateTime? @db.Timestamptz(3)
+  refreshTokenExpiresAt DateTime? @db.Timestamptz(3)
+  scope                 String?
+  idToken               String?
+  password              String?
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("account")
+}
+
+// Better Auth required table
+model Verification {
+  id        String   @id
+  createdAt DateTime @db.Timestamptz(3)
+  updatedAt DateTime @db.Timestamptz(3)
+
+  identifier String
+  value      String
+  expiresAt  DateTime @db.Timestamptz(3)
+
+  @@map("verification")
+}
+
+enum CharacterRole {
+  STUDENT
+  STAFF
+}
+
+model Character {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  season      String
+  seatId      String
+  userId      String
+  role        CharacterRole @default(STUDENT)
+  name        String
+  nameEn      String?
+  cardId      String?
+  year        Int?
+  class       String?
+  seatRow     Int?
+  seatColumn  Int?
+  title       String?
+  unit        String?
+  race        String?
+  major       String?
+  birthday    DateTime?
+  description String?
+  verified    Boolean       @default(false)
+  twitter     String?
+
+  user         User?           @relation(fields: [userId], references: [id])
+  idCardImages Image[]         @relation("CharacterIdCardImages")
+  works        WorkCharacter[]
+}
+
+model Image {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  storageKey           String  @unique
+  uploadedByUserId     String
+  idCardForCharacterId String?
+
+  uploadedByUser     User        @relation("UserUploadedImages", fields: [uploadedByUserId], references: [id])
+  idCardForCharacter Character?  @relation("CharacterIdCardImages", fields: [idCardForCharacterId], references: [id])
+  works              WorkImage[]
+}
+
+model Work {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  title       String
+  description String?
+  authorId    String
+
+  author     User            @relation(fields: [authorId], references: [id])
+  images     WorkImage[]
+  characters WorkCharacter[]
+}
+
+model WorkImage {
+  workId  String
+  imageId String
+
+  work  Work  @relation(fields: [workId], references: [id])
+  image Image @relation(fields: [imageId], references: [id])
+
+  @@id([workId, imageId])
+}
+
+model WorkCharacter {
+  workId      String
+  characterId String
+
+  work      Work      @relation(fields: [workId], references: [id])
+  character Character @relation(fields: [characterId], references: [id])
+
+  @@id([workId, characterId])
+}

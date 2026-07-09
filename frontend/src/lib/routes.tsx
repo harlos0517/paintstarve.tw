@@ -1,7 +1,9 @@
+import { Navigate } from 'react-router-dom'
+
 import Classes from '@/pages/Classes'
 import Clazz from '@/pages/Clazz'
 import Students from '@/pages/Students'
-import { Navigate } from 'react-router-dom'
+import AdminIndex from '@/pages/admin/Index'
 
 export type Route = {
   key: string
@@ -24,4 +26,8 @@ export const routes: Route[] = [
   { key: 'anthem', name: '校歌', path: '/anthem', component: <></> },
   { key: 'projects', name: '企劃', path: '/projects', component: <></> },
   { key: 'rules', name: '校規', path: '/rules', component: <></> },
+]
+
+export const adminRoutes: Route[] = [
+  { key: 'index', name: '管理', path: '', component: <AdminIndex /> },
 ]

@@ -2,10 +2,10 @@ import {
   createHashRouter,
   createRoutesFromElements,
   Route,
-  RouterProvider,
+  RouterProvider
 } from 'react-router-dom'
 
-import { routes } from '@/lib/routes'
+import { adminRoutes, routes } from '@/lib/routes'
 
 const router = (children?: React.ReactNode) => createHashRouter(
   createRoutesFromElements(
@@ -15,6 +15,13 @@ const router = (children?: React.ReactNode) => createHashRouter(
         path={route.path}
         element={route.component}
       />)}
+      <Route path="admin">
+        {adminRoutes.map(route => <Route
+          key={route.key ?? route.path}
+          path={route.path}
+          element={route.component}
+        />)}
+      </Route>
       {/* <Route path="*" element={<NotFound />} /> */}
     </Route>,
   ),
