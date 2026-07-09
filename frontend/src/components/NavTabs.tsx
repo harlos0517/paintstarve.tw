@@ -1,7 +1,8 @@
-import { routes } from '@/lib/routes'
 import { Burger, Center, Group, Image, Overlay, Space, Tabs, Title } from '@mantine/core'
 import React, { memo } from 'react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
+
+import { navlinks } from '@/lib/navlinks'
 
 import styles from './NavTabs.module.sass'
 
@@ -16,12 +17,12 @@ type NavTabsProps = {
 const NavTabs: React.FC<NavTabsProps> = ({ opened, toggle, close }) => {
   const navigate = useNavigate()
   const { pathname } = useLocation()
-  const currentRoute = routes.find(route => pathname === route.path)
+  const currentRoute = navlinks.find(link => pathname === link.path)
 
   return <Tabs
     className={styles['nav-tabs']}
     value={currentRoute?.key}
-    onChange={value => navigate(routes.find(r => r.key === value)?.path ?? '/')}
+    onChange={value => navigate(navlinks.find(link => link.key === value)?.path ?? '/')}
     h="100%"
     pos="sticky"
     top={0}
@@ -52,9 +53,9 @@ const NavTabs: React.FC<NavTabsProps> = ({ opened, toggle, close }) => {
           visibleFrom="sm"
           style={{ alignItems: 'center' }}
         >
-          {routes.filter(r => r.path !== '/' && (r.showInNav ?? true)).map(route =>
-            <Tabs.Tab key={route.key} value={route.key}>
-              {route.name}
+          {navlinks.filter(link => link.path !== '/').map(link =>
+            <Tabs.Tab key={link.key} value={link.key}>
+              {link.name}
             </Tabs.Tab>,
           )}
         </Tabs.List>

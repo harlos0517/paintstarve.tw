@@ -3,7 +3,7 @@ import { prismaAdapter } from 'better-auth/adapters/prisma'
 
 import db from '../db'
 
-const auth = betterAuth({
+const authControllers = betterAuth({
   database: prismaAdapter(db, {
     provider: 'postgresql',
   }),
@@ -30,4 +30,4 @@ const auth = betterAuth({
   },
 })
 
-export default auth
+export default authControllers

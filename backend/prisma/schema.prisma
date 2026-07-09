@@ -23,6 +23,12 @@ enum UserVerifiedStatus {
   REJECTED
 }
 
+enum WorkVerifiedStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
 model User {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
@@ -150,9 +156,11 @@ model Work {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  title       String
-  description String?
-  authorId    String
+  title        String
+  description  String?
+  authorId     String
+  verifyStatus WorkVerifiedStatus @default(PENDING)
+  show         Boolean            @default(true)
 
   author     User            @relation(fields: [authorId], references: [id])
   images     WorkImage[]

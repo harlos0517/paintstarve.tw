@@ -1,4 +1,4 @@
-import { routes } from '@/lib/routes'
+import { navlinks } from '@/lib/navlinks'
 import { Tabs } from '@mantine/core'
 import React, { memo } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -13,14 +13,14 @@ type DrawerProps = {
 const Drawer: React.FC<DrawerProps> = ({ toggle }) => {
   const navigate = useNavigate()
   const { pathname } = useLocation()
-  const currentRoute = routes.find(route => pathname === route.path)
+  const currentRoute = navlinks.find(link => pathname === link.path)
 
   return <Tabs
     className={styles['drawer']}
     value={currentRoute?.key}
     onChange={value => {
       toggle?.()
-      navigate(routes.find(r => r.key === value)?.path ?? '/')
+      navigate(navlinks.find(link => link.key === value)?.path ?? '/')
     }}
     orientation="vertical"
     px="md"
@@ -30,9 +30,9 @@ const Drawer: React.FC<DrawerProps> = ({ toggle }) => {
       style={{ alignItems: 'center' }}
       w="100%"
     >
-      {routes.filter(r => r.path !== '/' && (r.showInNav ?? true)).map(route =>
-        <Tabs.Tab key={route.key} value={route.key} w="100%" p="md" my="xs">
-          {route.name}
+      {navlinks.filter(link => link.path !== '/').map(link =>
+        <Tabs.Tab key={link.key} value={link.key} w="100%" p="md" my="xs">
+          {link.name}
         </Tabs.Tab>,
       )}
     </Tabs.List>

@@ -1,13 +1,14 @@
 import { defaultEndpointsFactory } from 'express-zod-api'
 import { z } from 'zod'
 
-import { UserVerifiedStatus } from '../../generated/prisma/enums'
-import { User } from '../db'
-import { adminAuthMiddleware } from '../middlewares/auth'
+import { UserVerifiedStatus } from '../../../generated/prisma/enums'
+import { User } from '../../db'
+import { adminAuthMiddleware } from '../../middlewares/auth'
 
 const adminApproveUser = defaultEndpointsFactory
   .addMiddleware(adminAuthMiddleware)
   .build({
+    method: 'patch',
     input: z.object({
       userId: z.string(),
       action: z.enum(['APPROVE', 'REJECT']),

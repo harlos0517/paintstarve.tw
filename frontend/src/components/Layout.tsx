@@ -1,11 +1,11 @@
-import { Affix, AppShell, Box, Button } from '@mantine/core'
+import { AppShell, Box } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
-import { InfoIcon } from '@phosphor-icons/react'
+import { Outlet } from 'react-router-dom'
 
 import Drawer from './Drawer'
 import NavTabs from './NavTabs'
 
-export default function FrontendShell({ children }: { children: React.ReactNode }) {
+export const Layout = () => {
   const [opened, { toggle, close }] = useDisclosure()
 
   return <>
@@ -37,19 +37,11 @@ export default function FrontendShell({ children }: { children: React.ReactNode 
         h="100lvh"
       >
         <Box pt="md" pb="60px">
-          {children}
+          <Outlet />
         </Box>
       </AppShell.Main>
     </AppShell>
-    <Affix position={{ bottom: 20, right: 20 }}>
-      <Button leftSection={<InfoIcon size={16} />}
-        component="a"
-        href="https://forms.gle/Tbuqq6wi9Bcuj1Q3A"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        回報資料錯誤缺失
-      </Button>
-    </Affix>
   </>
 }
+
+export default Layout

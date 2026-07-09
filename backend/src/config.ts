@@ -1,11 +1,20 @@
 import { toNodeHandler } from 'better-auth/node'
 import { createConfig } from 'express-zod-api'
+import createHttpError from 'http-errors'
 
-import auth from './utils/auth'
+import authControllers from './utils/authControllers'
 
 const config = createConfig({
   http: { listen: 8088 },
-  cors: false,
+  cors: ({ defaultHeaders }) => ({
+    ...defaultHeaders,
+    'Access-Control-Allow-Origin': process.env.FRONTEND_URL!,
+    'Access-Control-Allow-Credentials': 'true',
+  }),
+  upload: {
+    limits: { fileSize: 10 * 1024 * 1024 },
+    limitError: createHttpError(413, 'The uploaded file is too large'),
+  },
   beforeRouting: ({ app }) => {
     // better-auth is mounted directly on the app, bypassing express-zod-api's
     // own `cors` option, so it needs its own CORS handling with credentials.
@@ -20,7 +29,7 @@ const config = createConfig({
       }
       next()
     })
-    app.all('/api/auth/{*any}', toNodeHandler(auth))
+    app.all('/api/auth/{*any}', toNodeHandler(authControllers))
   },
   gracefulShutdown: {
     timeout: 1000,
@@ -30,4 +39,4 @@ const config = createConfig({
 
 export default config
 
-export { auth }
+export { authControllers as auth }

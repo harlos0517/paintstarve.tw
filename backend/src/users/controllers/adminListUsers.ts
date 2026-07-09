@@ -1,8 +1,8 @@
 import { defaultEndpointsFactory } from 'express-zod-api'
 import { z } from 'zod'
 
-import { User } from '../db'
-import { adminAuthMiddleware } from '../middlewares/auth'
+import { User } from '../../db'
+import { adminAuthMiddleware } from '../../middlewares/auth'
 
 const adminListUsers = defaultEndpointsFactory
   .addMiddleware(adminAuthMiddleware)
@@ -11,8 +11,8 @@ const adminListUsers = defaultEndpointsFactory
       name: z.string().optional(),
       role: z.enum(['USER', 'ADMIN']).optional(),
       verifyStatus: z.enum(['PENDING', 'VERIFIED', 'REJECTED']).optional(),
-      page: z.number().int().min(1).default(1),
-      per: z.number().int().min(1).max(100).default(10),
+      page: z.coerce.number().int().min(1).default(1),
+      per: z.coerce.number().int().min(1).max(100).default(10),
     }),
     output: z.object({
       users: z.array(

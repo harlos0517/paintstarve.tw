@@ -2,11 +2,11 @@ import { fromNodeHeaders } from 'better-auth/node'
 import { Middleware } from 'express-zod-api'
 import createHttpError from 'http-errors'
 
-import auth from '../utils/auth'
+import authControllers from '../utils/authControllers'
 
 const userAuthMiddleware = new Middleware({
   handler: async({ request }) => {
-    const session = await auth.api.getSession({
+    const session = await authControllers.api.getSession({
       headers: fromNodeHeaders(request.headers),
     })
 
@@ -18,7 +18,7 @@ const userAuthMiddleware = new Middleware({
 
 const adminAuthMiddleware = new Middleware({
   handler: async({ request }) => {
-    const session = await auth.api.getSession({
+    const session = await authControllers.api.getSession({
       headers: fromNodeHeaders(request.headers),
     })
 

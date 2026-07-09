@@ -19,15 +19,24 @@ importers:
       better-auth:
         specifier: ^1.6.23
         version: 1.6.23(@prisma/client@7.8.0(prisma@7.8.0(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(typescript@6.0.3))(mysql2@3.15.3)(pg@8.22.0)(prisma@7.8.0(@types/react-dom@19.2.3(@types/react@19.2.17))(@types/react@19.2.17)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(typescript@6.0.3))(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      csv-parse:
+        specifier: ^7.0.1
+        version: 7.0.1
+      csv-stringify:
+        specifier: ^6.8.1
+        version: 6.8.1
       dotenv:
         specifier: ^17.4.2
         version: 17.4.2
       express:
         specifier: ^5.2.1
         version: 5.2.1
+      express-fileupload:
+        specifier: ^1.5.2
+        version: 1.5.2
       express-zod-api:
         specifier: ^28.7.5
-        version: 28.7.5(@types/express@5.0.6)(@types/http-errors@2.0.5)(@types/node@24.13.2)(express@5.2.1)(http-errors@2.0.1)(typescript@6.0.3)(zod@4.4.3)
+        version: 28.7.5(@types/express-fileupload@1.5.1)(@types/express@5.0.6)(@types/http-errors@2.0.5)(@types/node@24.13.2)(express-fileupload@1.5.2)(express@5.2.1)(http-errors@2.0.1)(typescript@6.0.3)(zod@4.4.3)
       http-errors:
         specifier: ^2.0.1
         version: 2.0.1
@@ -47,6 +56,9 @@ importers:
       '@types/express':
         specifier: ^5.0.6
         version: 5.0.6
+      '@types/express-fileupload':
+        specifier: ^1.5.1
+        version: 1.5.1
       '@types/http-errors':
         specifier: ^2.0.5
         version: 2.0.5
@@ -1170,6 +1182,9 @@ packages:
   '@types/body-parser@1.19.6':
     resolution: {integrity: sha512-HLFeCYgz89uk22N5Qg3dvGvsv46B8GLvKKo1zKG4NybA8U2DiEO3w9lqGg29t/tfLRJpJ6iQxnVw4OnB7MoM9g==}
 
+  '@types/busboy@1.5.4':
+    resolution: {integrity: sha512-kG7WrUuAKK0NoyxfQHsVE6j1m01s6kMma64E+OZenQABMQyTJop1DumUWcLwAQ2JzpefU7PDYoRDKl8uZosFjw==}
+
   '@types/connect@3.4.38':
     resolution: {integrity: sha512-K6uROf1LD88uDQqJCktA4yzL1YYAK6NgfsI0v/mTgyPKWsX1CnJ0XPSDhViejru1GcRkLWb8RlzFYJRqGUbaug==}
 
@@ -1178,6 +1193,9 @@ packages:
 
   '@types/estree@1.0.9':
     resolution: {integrity: sha512-GhdPgy1el4/ImP05X05Uw4cw2/M93BCUmnEvWZNStlCzEKME4Fkk+YpoA5OiHNQmoS7Cafb8Xa3Pya8m1Qrzeg==}
+
+  '@types/express-fileupload@1.5.1':
+    resolution: {integrity: sha512-DllImBVI1lCyjl2klky/TEwk60mbNebgXv1669h66g9TfptWSrEFq5a/raHSutaFzjSm1tmn9ypdNfu4jPSixQ==}
 
   '@types/express-serve-static-core@5.1.2':
     resolution: {integrity: sha512-d3KvEXBSo/lOAMc2u6fkyDHBvetBHeqD7wm/AcXfLpSOQwlmG9D/aQ0SFswVjv05p7ullQS7Mjohj6/VdbZuTg==}
@@ -1419,6 +1437,10 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
 
+  busboy@1.6.0:
+    resolution: {integrity: sha512-8SFQbg/0hQ9xy3UNTB0YEnsNBbWfhf7RtnzpL7TkBiTBRfrQ9Fxcnz7VJsleJpyp6rVLvXiuORqjlHi5q+PYuA==}
+    engines: {node: '>=10.16.0'}
+
   bytes@3.1.2:
     resolution: {integrity: sha512-/Nf7TyzTx6S3yRJObOAV7956r8cr2+Oj8AC5dt8wSP3BQAoeX58NoHyCU8P8zGkNXStjTSi6fzO6F0pBdcYbEg==}
     engines: {node: '>= 0.8'}
@@ -1501,6 +1523,12 @@ packages:
 
   csstype@3.2.3:
     resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
+
+  csv-parse@7.0.1:
+    resolution: {integrity: sha512-+2z7Ar0APQ7Uu6fX4cn+pitRmxjZ1WPBcGmZFKmA74FCyi7Et/XZx8cjNQ5CjbZ4HCOxXCOpRBYvYH08Qa003A==}
+
+  csv-stringify@6.8.1:
+    resolution: {integrity: sha512-tZ6X6TKQyQgCo5OptXcyAbfN1pwmoxEqELPQ7KFazNErx7kiVsDK8o+VYRXhfMl4N9vvOOLXuioquR2MeP847A==}
 
   debug@4.4.3:
     resolution: {integrity: sha512-RGwwWnwQvkVfavKVt22FGLw+xYSdzARwm0ru6DhTVA3umU5hZc28V3kO4stgYryrTlLpuvgI9GiijltAjNbcqA==}
@@ -1677,6 +1705,10 @@ packages:
   etag@1.8.1:
     resolution: {integrity: sha512-aIL5Fx7mawVa300al2BnEE4iNvo1qETxLrPI/o05L7z6go7fCw1J6EQmbK4FmJ2AS7kgVF/KEZWufBfdClMcPg==}
     engines: {node: '>= 0.6'}
+
+  express-fileupload@1.5.2:
+    resolution: {integrity: sha512-wxUJn2vTHvj/kZCVmc5/bJO15C7aSMyHeuXYY3geKpeKibaAoQGcEv5+sM6nHS2T7VF+QHS4hTWPiY2mKofEdg==}
+    engines: {node: '>=12.0.0'}
 
   express-zod-api@28.7.5:
     resolution: {integrity: sha512-uKnlRzNe3YVwuD1zLkRiI9gjXbfFp7QOfw7gLkVg63U8GwMFjUilU34u7LWYiJSK/3Cr5QQx6JiOSEtKjxHNVA==}
@@ -2644,6 +2676,10 @@ packages:
 
   std-env@3.10.0:
     resolution: {integrity: sha512-5GS12FdOZNliM5mAOxFRg7Ir0pWz8MdpYm6AY6VPkGpbA7ZzmbzNcBJQ0GPvvyWgcY7QAhCgf9Uy89I03faLkg==}
+
+  streamsearch@1.1.0:
+    resolution: {integrity: sha512-Mcc5wHehp9aXz1ax6bZUyY5afg9u2rv5cqQI3mRrYkGC8rW2hM02jWuwjtL++LS5qinSyhj2QfLyNsuc+VsExg==}
+    engines: {node: '>=10.0.0'}
 
   supports-color@8.1.1:
     resolution: {integrity: sha512-MpUEN2OodtUzxvKQl72cUF7RQ5EiHsGvSsVG0ia9c5RbWGL2CI4C7EpPS8UTBIplnlzZiNuV56w+FuNxy3ty2Q==}
@@ -3640,6 +3676,10 @@ snapshots:
       '@types/connect': 3.4.38
       '@types/node': 24.13.2
 
+  '@types/busboy@1.5.4':
+    dependencies:
+      '@types/node': 24.13.2
+
   '@types/connect@3.4.38':
     dependencies:
       '@types/node': 24.13.2
@@ -3647,6 +3687,11 @@ snapshots:
   '@types/esrecurse@4.3.1': {}
 
   '@types/estree@1.0.9': {}
+
+  '@types/express-fileupload@1.5.1':
+    dependencies:
+      '@types/busboy': 1.5.4
+      '@types/express': 5.0.6
 
   '@types/express-serve-static-core@5.1.2':
     dependencies:
@@ -3922,6 +3967,10 @@ snapshots:
       node-releases: 2.0.48
       update-browserslist-db: 1.2.3(browserslist@4.28.2)
 
+  busboy@1.6.0:
+    dependencies:
+      streamsearch: 1.1.0
+
   bytes@3.1.2: {}
 
   c12@3.3.4:
@@ -3994,6 +4043,10 @@ snapshots:
       which: 2.0.2
 
   csstype@3.2.3: {}
+
+  csv-parse@7.0.1: {}
+
+  csv-stringify@6.8.1: {}
 
   debug@4.4.3:
     dependencies:
@@ -4213,7 +4266,11 @@ snapshots:
 
   etag@1.8.1: {}
 
-  express-zod-api@28.7.5(@types/express@5.0.6)(@types/http-errors@2.0.5)(@types/node@24.13.2)(express@5.2.1)(http-errors@2.0.1)(typescript@6.0.3)(zod@4.4.3):
+  express-fileupload@1.5.2:
+    dependencies:
+      busboy: 1.6.0
+
+  express-zod-api@28.7.5(@types/express-fileupload@1.5.1)(@types/express@5.0.6)(@types/http-errors@2.0.5)(@types/node@24.13.2)(express-fileupload@1.5.2)(express@5.2.1)(http-errors@2.0.1)(typescript@6.0.3)(zod@4.4.3):
     dependencies:
       ansis: 4.3.1
       express: 5.2.1
@@ -4224,7 +4281,9 @@ snapshots:
       zod: 4.4.3
     optionalDependencies:
       '@types/express': 5.0.6
+      '@types/express-fileupload': 1.5.1
       '@types/http-errors': 2.0.5
+      express-fileupload: 1.5.2
       typescript: 6.0.3
     transitivePeerDependencies:
       - '@types/node'
@@ -5074,6 +5133,8 @@ snapshots:
   statuses@2.0.2: {}
 
   std-env@3.10.0: {}
+
+  streamsearch@1.1.0: {}
 
   supports-color@8.1.1:
     dependencies:

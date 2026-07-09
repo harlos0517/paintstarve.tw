@@ -1,29 +1,30 @@
 import { defaultEndpointsFactory } from 'express-zod-api'
 import { z } from 'zod'
 
-import { User } from '../db'
-import { adminAuthMiddleware } from '../middlewares/auth'
+import { User } from '../../db'
+import { adminAuthMiddleware } from '../../middlewares/auth'
 
-const adminAssignCharacters = defaultEndpointsFactory
+const adminAdjustUserRoles = defaultEndpointsFactory
   .addMiddleware(adminAuthMiddleware)
   .build({
+    method: 'patch',
     input: z.object({
       userId: z.string(),
-      characterIds: z.array(z.string()),
+      role: z.enum(['ADMIN', 'USER']),
     }),
     output: z.object({
       success: z.boolean(),
     }),
     handler: async({ input }) => {
-      const { userId, characterIds } = input
+      const { userId, role } = input
 
       await User.updateMany({
         where: { id: userId },
-        data: { characterIds },
+        data: { role },
       })
 
       return { success: true }
     },
   })
 
-export default adminAssignCharacters
+export default adminAdjustUserRoles
