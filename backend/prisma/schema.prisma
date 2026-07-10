@@ -143,6 +143,8 @@ model Character {
   idCardImages Image[]                 @relation("CharacterIdCardImages")
   works        WorkCharacter[]
   claims       CharacterClaimRequest[]
+
+  @@unique([season, seatId])
 }
 
 model CharacterClaimRequest {

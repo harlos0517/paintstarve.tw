@@ -1,4 +1,5 @@
 import { defaultEndpointsFactory } from 'express-zod-api'
+import createHttpError from 'http-errors'
 import { z } from 'zod'
 
 import { User } from '../../db'
@@ -15,8 +16,11 @@ const adminAdjustUserRoles = defaultEndpointsFactory
     output: z.object({
       success: z.boolean(),
     }),
-    handler: async({ input }) => {
+    handler: async({ input, ctx }) => {
       const { userId, role } = input
+
+      if (role !== 'ADMIN' && userId === ctx.user.id)
+        throw createHttpError(409, '無法移除自身管理員權限')
 
       await User.updateMany({
         where: { id: userId },

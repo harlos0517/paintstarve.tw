@@ -62,44 +62,56 @@ const adminImportCharactersCsv = defaultEndpointsFactory
         }
 
         const { id, userId, ...rest } = parsed.data
-        const existing = id ? await Character.findUnique({ where: { id } }) : null
 
-        if (existing) {
-          await Character.update({
-            where: { id: existing.id },
+        try {
+          // Fall back to (season, seatId) when id is not present
+          const existing = id
+            ? await Character.findUnique({ where: { id } })
+            : rest.season && rest.seatId
+              ? await Character.findUnique({
+                where: { season_seatId: { season: rest.season, seatId: rest.seatId } },
+              })
+              : null
+
+          if (existing) {
+            await Character.update({
+              where: { id: existing.id },
+              data: {
+                ...rest,
+                ...(userId ? { userId } : {}),
+              },
+            })
+            await linkIdCardImage(existing.id, rawRow.fileId?.trim(), ctx.user.id)
+            updated += 1
+            continue
+          }
+
+          if (!rest.season || !rest.seatId || !rest.name) {
+            const missing = []
+            if (!rest.season) missing.push('season')
+            if (!rest.seatId) missing.push('seatId')
+            if (!rest.name) missing.push('name')
+            errors.push({
+              row,
+              message: `Missing required fields: ${missing.join(', ')}`,
+            })
+            continue
+          }
+
+          const character = await Character.create({
             data: {
               ...rest,
-              ...(userId ? { userId } : {}),
+              season: rest.season,
+              seatId: rest.seatId,
+              name: rest.name,
+              userId,
             },
           })
-          await linkIdCardImage(existing.id, rawRow.fileId?.trim(), ctx.user.id)
-          updated += 1
-          continue
+          await linkIdCardImage(character.id, rawRow.fileId?.trim(), ctx.user.id)
+          created += 1
+        } catch(err) {
+          errors.push({ row, message: err instanceof Error ? err.message : String(err) })
         }
-
-        if (!rest.season || !rest.seatId || !rest.name) {
-          const missing = []
-          if (!rest.season) missing.push('season')
-          if (!rest.seatId) missing.push('seatId')
-          if (!rest.name) missing.push('name')
-          errors.push({
-            row,
-            message: `Missing required fields: ${missing.join(', ')}`,
-          })
-          continue
-        }
-
-        const character = await Character.create({
-          data: {
-            ...rest,
-            season: rest.season,
-            seatId: rest.seatId,
-            name: rest.name,
-            userId,
-          },
-        })
-        await linkIdCardImage(character.id, rawRow.fileId?.trim(), ctx.user.id)
-        created += 1
       }
 
       return { created, updated, errors }
