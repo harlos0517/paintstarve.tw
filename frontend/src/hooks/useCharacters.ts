@@ -1,8 +1,10 @@
 import {
   AdminCharacterUpdateInput,
   CharacterListFilters,
+  exportCharactersCsv,
   getAdminCharacter,
   getMeCharacter,
+  importCharactersCsv,
   listAdminCharacters,
   listMeCharacters,
   listPublicCharacters,
@@ -34,3 +36,7 @@ export const useAdminCharacter = (characterId: string | undefined) =>
 export const useUpdateAdminCharacter = () =>
   useMutation((characterId: string, input: AdminCharacterUpdateInput) =>
     updateAdminCharacter(characterId, input))
+
+export const useExportCharactersCsv = () => useMutation(() => exportCharactersCsv())
+
+export const useImportCharactersCsv = () => useMutation((file: File) => importCharactersCsv(file))

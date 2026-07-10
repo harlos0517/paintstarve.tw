@@ -11,9 +11,12 @@ const backendClient = axios.create({
 
 // Unwrap express-zod-api's `{ status: 'success', data }` envelope so callers
 // just get the payload back. Error responses are left untouched (still
-// rejected as AxiosError) so getErrorMessage below can read them.
+// rejected as AxiosError) so getErrorMessage below can read them. Non-JSON
+// responses (e.g. the CSV export, which comes back as plain text) don't
+// have this envelope, so leave those untouched too.
 backendClient.interceptors.response.use(response => {
-  response.data = response.data?.data
+  const { data } = response
+  if (data && typeof data === 'object' && 'data' in data) response.data = data.data
   return response
 })
 

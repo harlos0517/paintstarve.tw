@@ -10,6 +10,7 @@ import AdminLayout from '@/components/admin/AdminLayout'
 import Layout from '@/components/Layout'
 import AdminCharacterEdit from '@/pages/admin/CharacterEdit'
 import AdminCharacters from '@/pages/admin/Characters'
+import AdminCharactersImportExport from '@/pages/admin/CharactersImportExport'
 import AdminMe from '@/pages/admin/Me'
 import AdminMeCharacterEdit from '@/pages/admin/MeCharacterEdit'
 import AdminMeCharacters from '@/pages/admin/MeCharacters'
@@ -33,6 +34,7 @@ const router = () => createHashRouter(
         <Route path="me/characters" element={<AdminMeCharacters />} />
         <Route path="me/characters/:characterId" element={<AdminMeCharacterEdit />} />
         <Route path="characters" element={<AdminCharacters />} />
+        <Route path="characters/import-export" element={<AdminCharactersImportExport />} />
         <Route path="characters/:characterId" element={<AdminCharacterEdit />} />
         <Route path="users" element={<AdminUsers />} />
       </Route>

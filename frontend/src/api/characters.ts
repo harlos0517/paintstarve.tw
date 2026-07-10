@@ -141,3 +141,33 @@ export const listPublicCharacters = async(filters: CharacterListFilters = {}) =>
   )
   return data
 }
+
+export interface ImportCharactersRowError {
+  row: number
+  message: string
+}
+
+export interface ImportCharactersResult {
+  created: number
+  updated: number
+  errors: ImportCharactersRowError[]
+}
+
+// The export endpoint returns a raw text/csv body, not the usual JSON envelope.
+export const exportCharactersCsv = async() => {
+  const { data } = await backendClient.get<string>(
+    '/api/v1/admin/characters/export',
+    { responseType: 'text' },
+  )
+  return data
+}
+
+export const importCharactersCsv = async(file: File) => {
+  const formData = new FormData()
+  formData.append('file', file)
+  const { data } = await backendClient.post<ImportCharactersResult>(
+    '/api/v1/admin/characters/import',
+    formData,
+  )
+  return data
+}

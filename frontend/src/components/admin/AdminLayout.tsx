@@ -51,19 +51,23 @@ const NavTabs = ({ isAdmin }: { isAdmin: boolean }) => {
 
   const userTabs = [
     { key: 'me', label: '我的資料', path: '/admin/me' },
-    { key: 'me-characters', label: '我的角色', path: '/admin/me/characters' },
+    { key: 'me-characters', label: '我的角色', path: '/admin/me/characters', priority: 2 },
   ]
 
   const adminTabs = [
-    { key: 'characters', label: '角色管理', path: '/admin/characters' },
+    { key: 'characters', label: '角色管理', path: '/admin/characters', priority: 3 },
+    {
+      key: 'characters-import-export',
+      label: '角色匯入匯出',
+      path: '/admin/characters/import-export',
+      priority: 1,
+    },
     { key: 'users', label: '使用者管理', path: '/admin/users' },
   ]
 
   const tabs = isAdmin ? [...userTabs, ...adminTabs] : userTabs
-  const currentKey =
-    pathname.startsWith('/admin/me/characters') ? 'me-characters'
-      : pathname.startsWith('/admin/characters') ? 'characters'
-        : tabs.find(tab => tab.path === pathname)?.key
+  const tabsByPriority = [...tabs].sort((a, b) => (a.priority ?? 100) - (b.priority ?? 100))
+  const currentKey = tabsByPriority.find(tab => pathname.startsWith(tab.path))?.key
 
   return <Group justify="space-between" mb="md">
     <Tabs
