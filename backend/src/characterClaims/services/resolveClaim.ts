@@ -27,6 +27,10 @@ export async function resolveClaim(
       where: { characterId: claim.characterId, status: 'PENDING', NOT: { id: claim.id } },
       data: { status: 'REJECTED' },
     })
+    await tx.image.updateMany({
+      where: { idCardForCharacterId: claim.characterId },
+      data: { uploadedByUserId: claim.userId },
+    })
     return true
   }
 
