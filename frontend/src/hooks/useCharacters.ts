@@ -5,11 +5,15 @@ import {
   getMeCharacter,
   listAdminCharacters,
   listMeCharacters,
+  listPublicCharacters,
   MeCharacterUpdateInput,
   updateAdminCharacter,
   updateMeCharacter,
 } from '@/api/characters'
 import { useMutation, useQuery } from '@/hooks/useApi'
+
+export const usePublicCharacterList = (filters: CharacterListFilters = {}) =>
+  useQuery(() => listPublicCharacters(filters), [JSON.stringify(filters)])
 
 export const useMeCharacterList = (filters: CharacterListFilters = {}) =>
   useQuery(() => listMeCharacters(filters), [JSON.stringify(filters)])

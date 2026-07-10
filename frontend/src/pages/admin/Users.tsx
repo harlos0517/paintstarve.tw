@@ -1,5 +1,5 @@
 import {
-  Alert, Badge, Button, Group, Select, Table, Text, TextInput, Title,
+  Alert, Badge, Button, Group, Pagination, Select, Table, TextInput, Title,
 } from '@mantine/core'
 import { useState } from 'react'
 
@@ -29,7 +29,8 @@ const AdminUsersContent = () => {
     page,
     per,
   }
-  const { data: users, loading, error, refetch } = useAdminUserList(filters)
+  const { data, loading, error, refetch } = useAdminUserList(filters)
+  const totalPages = data ? Math.ceil(data.total / per) : 0
   const { mutate: approve } = useApproveUser()
   const { mutate: adjustRole } = useAdjustUserRole()
   const [rowError, setRowError] = useState<string>()
@@ -91,7 +92,7 @@ const AdminUsersContent = () => {
         </Table.Tr>
       </Table.Thead>
       <Table.Tbody>
-        {!loading && users?.map(user => <Table.Tr key={user.id}>
+        {!loading && data?.users.map(user => <Table.Tr key={user.id}>
           <Table.Td>{user.name}</Table.Td>
           <Table.Td>{user.email}</Table.Td>
           <Table.Td>
@@ -130,17 +131,7 @@ const AdminUsersContent = () => {
     </Table>
 
     <Group mt="md" justify="center">
-      <Button variant="default" disabled={page <= 1} onClick={() => setPage(p => p - 1)}>
-        上一頁
-      </Button>
-      <Text size="sm">第 {page} 頁</Text>
-      <Button
-        variant="default"
-        disabled={!users || users.length < per}
-        onClick={() => setPage(p => p + 1)}
-      >
-        下一頁
-      </Button>
+      <Pagination value={page} onChange={setPage} total={totalPages} />
     </Group>
   </>
 }

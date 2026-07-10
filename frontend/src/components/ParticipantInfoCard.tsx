@@ -1,11 +1,11 @@
 import { Affix, Box, Card, Center, Divider, Group, Stack, Text } from '@mantine/core'
 
-import { Participant } from '@/api/types'
+import { Character } from '@/api/characters'
 import { IdCardImage } from '@/components/IdCardImage'
 import StaffBasicInfo from '@/components/StaffBasicInfo'
 import StudentBasicInfo from '@/components/StudentBasicInfo'
 
-export interface ParticipantInfoCardProps extends Participant {
+export interface ParticipantInfoCardProps extends Character {
   setShowDetail: (show: boolean) => void
 }
 
@@ -13,12 +13,11 @@ const ParticipantInfoCard = (props: ParticipantInfoCardProps) => {
   const {
     role,
     name,
-    idCardImageUrl,
     description,
     setShowDetail,
   } = props
 
-  const basicInfo = role === 'student'
+  const basicInfo = role === 'STUDENT'
     ? <StudentBasicInfo {...props} />
     : <StaffBasicInfo {...props} />
 
@@ -46,7 +45,7 @@ const ParticipantInfoCard = (props: ParticipantInfoCardProps) => {
         <Card.Section>
           <Stack>
             <Group wrap="nowrap">
-              <IdCardImage src={idCardImageUrl} bdrs="md" alt={name} />
+              <IdCardImage bdrs="md" alt={name} />
               <Box mih="12rem">{basicInfo}</Box>
             </Group>
             {description && <>

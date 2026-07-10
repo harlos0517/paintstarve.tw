@@ -7,13 +7,20 @@ interface UseQueryResult<T> {
   refetch: () => void
 }
 
-// A minimal GET-style data fetching hook (loading/error/refetch), in the
-// same spirit as the existing useData hook, generalized for any async fn.
+// A minimal GET-style data fetching hook (loading/error/refetch)
 export function useQuery<T>(fn: () => Promise<T>, deps: unknown[]): UseQueryResult<T> {
   const [data, setData] = useState<T>()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<unknown>()
   const [reloadToken, setReloadToken] = useState(0)
+
+  const key = JSON.stringify([...deps, reloadToken])
+  const [committedKey, setCommittedKey] = useState(key)
+  if (key !== committedKey) {
+    setCommittedKey(key)
+    setLoading(true)
+    setError(undefined)
+  }
 
   useEffect(() => {
     let cancelled = false
@@ -23,12 +30,9 @@ export function useQuery<T>(fn: () => Promise<T>, deps: unknown[]): UseQueryResu
       .finally(() => { if (!cancelled) setLoading(false) })
     return () => { cancelled = true }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [...deps, reloadToken])
+  }, [committedKey])
 
-  const refetch = useCallback(() => {
-    setLoading(true)
-    setReloadToken(t => t + 1)
-  }, [])
+  const refetch = useCallback(() => setReloadToken(t => t + 1), [])
 
   return { data, loading, error, refetch }
 }

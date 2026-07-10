@@ -1,4 +1,4 @@
-import { Alert, Badge, Button, Group, Select, Table, Text, TextInput, Title } from '@mantine/core'
+import { Alert, Badge, Group, Pagination, Select, Table, TextInput, Title } from '@mantine/core'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -21,7 +21,8 @@ const AdminCharactersContent = () => {
     page,
     per,
   }
-  const { data: characters, loading, error } = useAdminCharacterList(filters)
+  const { data, loading, error } = useAdminCharacterList(filters)
+  const totalPages = data ? Math.ceil(data.total / per) : 0
 
   return <>
     <Title order={2} mb="md">角色管理</Title>
@@ -48,7 +49,6 @@ const AdminCharactersContent = () => {
       <Table.Thead>
         <Table.Tr>
           <Table.Th>姓名</Table.Th>
-          <Table.Th>英文名</Table.Th>
           <Table.Th>身份</Table.Th>
           <Table.Th>梯次</Table.Th>
           <Table.Th>班級</Table.Th>
@@ -56,13 +56,12 @@ const AdminCharactersContent = () => {
         </Table.Tr>
       </Table.Thead>
       <Table.Tbody>
-        {!loading && characters?.map(character => <Table.Tr
+        {!loading && data?.characters.map(character => <Table.Tr
           key={character.id}
           onClick={() => navigate(`/admin/characters/${character.id}`)}
           style={{ cursor: 'pointer' }}
         >
           <Table.Td>{character.name}</Table.Td>
-          <Table.Td>{character.nameEn}</Table.Td>
           <Table.Td>{character.role === 'STUDENT' ? '學生' : '教職員'}</Table.Td>
           <Table.Td>{character.season}</Table.Td>
           <Table.Td>
@@ -78,17 +77,7 @@ const AdminCharactersContent = () => {
     </Table>
 
     <Group mt="md" justify="center">
-      <Button variant="default" disabled={page <= 1} onClick={() => setPage(p => p - 1)}>
-        上一頁
-      </Button>
-      <Text size="sm">第 {page} 頁</Text>
-      <Button
-        variant="default"
-        disabled={!characters || characters.length < per}
-        onClick={() => setPage(p => p + 1)}
-      >
-        下一頁
-      </Button>
+      <Pagination value={page} onChange={setPage} total={totalPages} />
     </Group>
   </>
 }

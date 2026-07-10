@@ -1,11 +1,13 @@
 import {
+  Alert,
   Box,
   Button,
+  Center,
   Checkbox,
   Collapse,
   Container,
   Group,
-  MultiSelect,
+  Loader,
   Pagination,
   Select,
   SimpleGrid,
@@ -14,51 +16,36 @@ import {
   Title,
 } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 
-import GlobalContext from '@/components/GlobalContext'
+import { CharacterRole } from '@/api/characters'
 import ParticipantListCard from '@/components/ParticipantListCard'
+import { usePublicCharacterList } from '@/hooks/useCharacters'
 
 const Students = () => {
-  const { students: allStudents } = useContext(GlobalContext)
-
   const [filterExpanded, { toggle: toggleFilter }] = useDisclosure(false)
 
-  const [roleFilter, setRoleFilter] = useState<string[]>([])
-  const [nameFilter, setNameFilter] = useState('')
-  const [yearFilter, setYearFilter] = useState<string[]>([])
-  const [classFilter, setClassFilter] = useState<string[]>([])
-  const [rowFilter, setRowFilter] = useState<string[]>([])
-  const [columnFilter, setColumnFilter] = useState<string[]>([])
-  const [raceFilter, setRaceFilter] = useState('')
-  const [majorFilter, setMajorFilter] = useState('')
-  const [birthdayTodayFilter, setBirthdayFilter] = useState(false)
-  const [verifiedFilter, setVerifiedFilter] = useState(false)
-  const filteredStudents = allStudents
-    .filter(s => !roleFilter.length || roleFilter.includes(s.role))
-    .filter(s => s.name && s.name !== '#N/A')
-    .filter(s => !nameFilter || s.name.includes(nameFilter) || s.nameEn?.includes(nameFilter))
-    .filter(s => !yearFilter.length || yearFilter.includes(s.year.toString()))
-    .filter(s => !classFilter.length || classFilter.includes(s.class))
-    .filter(s => !rowFilter.length || rowFilter.includes(s.seatRow.toString()))
-    .filter(s => !columnFilter.length || columnFilter.includes(s.seatColumn.toString()))
-    .filter(s => !raceFilter || s.race?.includes(raceFilter))
-    .filter(s => !majorFilter || s.major?.includes(majorFilter))
-    .filter(s => {
-      const [mm, dd] = (s.birthday?.split('-').map(Number)) || []
-      return !birthdayTodayFilter ||
-        (mm === new Date().getMonth() + 1 && dd === new Date().getDate())
-    })
-    .filter(s => !verifiedFilter || s.verified)
+  const [name, setName] = useState('')
+  const [role, setRole] = useState<CharacterRole | null>(null)
+  const [year, setYear] = useState<number | null>(null)
+  const [studentClass, setStudentClass] = useState<string | null>(null)
+  const [verified, setVerified] = useState(false)
+  const [page, setPage] = useState(1)
+  const [per, setPer] = useState(18)
 
-  const sortedStudents = [...filteredStudents] // TODO: sorting
+  const resetPage = () => setPage(1)
 
-  const [pageSize, setPageSize] = useState(18)
-  const [currentPage, setCurrentPage] = useState(1)
-  const totalPages = Math.ceil(sortedStudents.length / pageSize)
-  const paginatedStudents = sortedStudents.slice(
-    (currentPage - 1) * pageSize, currentPage * pageSize,
-  )
+  const filters = {
+    name: name || undefined,
+    role: role ?? undefined,
+    year: year ?? undefined,
+    class: studentClass ?? undefined,
+    verified: verified || undefined,
+    page,
+    per,
+  }
+  const { data, loading, error } = usePublicCharacterList(filters)
+  const totalPages = data ? Math.ceil(data.total / per) : 0
 
   return <Container p="md" size="1440px">
     <Stack>
@@ -67,119 +54,62 @@ const Students = () => {
         <Button onClick={toggleFilter}>篩選</Button>
       </Group>
       <Collapse expanded={filterExpanded}>
-        <Group>
+        <Group wrap="nowrap">
           <TextInput
             flex="1"
             label="姓名"
-            value={nameFilter}
-            onChange={event => {
-              setNameFilter(event.currentTarget.value)
-              setCurrentPage(1)
-            }}
+            value={name}
+            onChange={event => { setName(event.currentTarget.value); resetPage() }}
           />
-          <TextInput
+          <Select
             flex="1"
-            label="種族"
-            value={raceFilter}
-            onChange={event => {
-              setRaceFilter(event.currentTarget.value)
-              setCurrentPage(1)
-            }}
+            label="角色"
+            clearable
+            value={role}
+            onChange={v => { setRole(v as CharacterRole | null); resetPage() }}
+            data={[
+              { value: 'STUDENT', label: '學生' },
+              { value: 'STAFF', label: '教職員' },
+            ]}
           />
-          <TextInput
+          <Select
             flex="1"
-            label="主修"
-            value={majorFilter}
-            onChange={event => {
-              setMajorFilter(event.currentTarget.value)
-              setCurrentPage(1)
-            }}
+            label="年級"
+            clearable
+            value={year}
+            onChange={v => { setYear(v === null ? null : Number(v)); resetPage() }}
+            data={[
+              { value: 1, label: '一年級' },
+              { value: 2, label: '二年級' },
+              { value: 3, label: '三年級' },
+            ]}
           />
-          <Checkbox
-            label="今天生日"
-            checked={birthdayTodayFilter}
-            onChange={event => {
-              setBirthdayFilter(event.currentTarget.checked)
-              setCurrentPage(1)
-            }}
-            pt="1.5rem"
+          <Select
+            flex="1"
+            label="班級"
+            clearable
+            value={studentClass}
+            onChange={v => { setStudentClass(v); resetPage() }}
+            data={['A', 'B', 'C', 'D', 'E', 'F', 'G']}
           />
           <Checkbox
             label="已認證"
-            checked={verifiedFilter}
-            onChange={event => {
-              setVerifiedFilter(event.currentTarget.checked)
-              setCurrentPage(1)
-            }}
+            checked={verified}
+            onChange={event => { setVerified(event.currentTarget.checked); resetPage() }}
             pt="1.5rem"
           />
         </Group>
-        <Group wrap="nowrap" mt="sm">
-          <MultiSelect
-            flex="1"
-            label="角色"
-            value={roleFilter}
-            onChange={v => {
-              setRoleFilter(v)
-              setCurrentPage(1)
-            }}
-            data={[
-              { value: 'student', label: '學生' },
-              { value: 'staff', label: '教職員' },
-            ]}
-          />
-          <MultiSelect
-            flex="1"
-            label="年級"
-            value={yearFilter}
-            onChange={v => {
-              setYearFilter(v)
-              setCurrentPage(1)
-            }}
-            data={['1', '2', '3']}
-          />
-          <MultiSelect
-            flex="1"
-            label="班級"
-            value={classFilter}
-            onChange={v => {
-              setClassFilter(v)
-              setCurrentPage(1)
-            }}
-            data={['A', 'B', 'C', 'D', 'E', 'F', 'G']}
-          />
-          <MultiSelect
-            flex="1"
-            label="排"
-            value={rowFilter}
-            onChange={v => {
-              setRowFilter(v)
-              setCurrentPage(1)
-            }}
-            data={['1', '2', '3', '4', '5', '6', '7', '8']}
-          />
-          <MultiSelect
-            flex="1"
-            label="號"
-            value={columnFilter}
-            onChange={v => {
-              setColumnFilter(v)
-              setCurrentPage(1)
-            }}
-            data={['1', '2', '3', '4', '5']}
-          />
-        </Group>
       </Collapse>
+
+      {Boolean(error) && <Alert color="red">無法載入學生資料。</Alert>}
+
       <Group align="end" justify="space-between" w="100%">
-        <Pagination value={currentPage} onChange={setCurrentPage} total={totalPages} />
+        <Pagination value={page} onChange={setPage} total={totalPages} />
         <Box></Box>
         <Select
           label="每頁顯示"
-          value={pageSize}
-          onChange={v => {
-            setPageSize(v || 12)
-            setCurrentPage(1)
-          }}
+          value={per}
+          onChange={v => { setPer(v ? Number(v) : 12); resetPage() }}
           data={[
             { value: 5, label: '5' },
             { value: 12, label: '12' },
@@ -189,12 +119,16 @@ const Students = () => {
           ]}
         />
       </Group>
-      <SimpleGrid cols={{ xs: 1, sm: 2, lg: 3 }} spacing="md">
-        {paginatedStudents.map(student =>
-          <ParticipantListCard key={student.seatId} {...student} />,
-        )}
-      </SimpleGrid>
-      <Pagination value={currentPage} onChange={setCurrentPage} total={totalPages} />
+
+      {loading
+        ? <Center h="30vh"><Loader /></Center>
+        : <SimpleGrid cols={{ xs: 1, sm: 2, lg: 3 }} spacing="md">
+          {data?.characters.map(student => (
+            <ParticipantListCard key={student.seatId} {...student} />
+          ))}
+        </SimpleGrid>}
+
+      <Pagination value={page} onChange={setPage} total={totalPages} />
     </Stack>
   </Container>
 }

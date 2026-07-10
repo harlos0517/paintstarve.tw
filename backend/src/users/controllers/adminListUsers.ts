@@ -24,26 +24,32 @@ const adminListUsers = defaultEndpointsFactory
           verifyStatus: z.enum(['PENDING', 'VERIFIED', 'REJECTED']),
         }),
       ),
+      total: z.number().int(),
     }),
     handler: async({ input }) => {
-      const users = await User.findMany({
-        where: {
-          name: input.name ? { contains: input.name } : undefined,
-          role: input.role,
-          verifyStatus: input.verifyStatus,
-        },
-        skip: (input.page - 1) * input.per,
-        take: input.per,
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          role: true,
-          verifyStatus: true,
-        },
-      })
+      const where = {
+        name: input.name ? { contains: input.name } : undefined,
+        role: input.role,
+        verifyStatus: input.verifyStatus,
+      }
 
-      return { users }
+      const [users, total] = await Promise.all([
+        User.findMany({
+          where,
+          skip: (input.page - 1) * input.per,
+          take: input.per,
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+            verifyStatus: true,
+          },
+        }),
+        User.count({ where }),
+      ])
+
+      return { users, total }
     },
   })
 

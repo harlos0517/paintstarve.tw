@@ -64,7 +64,7 @@ const AdminMeCharacterEdit = () => {
   const navigate = useNavigate()
 
   const {
-    data: characters,
+    data: charactersResult,
     loading: loadingCharacters,
     error: charactersError,
   } = useMeCharacterList({ per: 8 })
@@ -80,7 +80,7 @@ const AdminMeCharacterEdit = () => {
 
   if (loadingCharacters) return <Center h="30vh"><Loader /></Center>
   if (charactersError || characterError) return <Alert color="red">無法載入角色資料。</Alert>
-  if (!characters || !character) return <Alert color="red">找不到此角色。</Alert>
+  if (!charactersResult || !character) return <Alert color="red">找不到此角色。</Alert>
 
   return <Stack>
     <Tabs
@@ -91,7 +91,9 @@ const AdminMeCharacterEdit = () => {
       }}
     >
       <Tabs.List>
-        {characters.map(ch => <Tabs.Tab key={ch.id} value={ch.id}>{ch.name}</Tabs.Tab>)}
+        {charactersResult.characters.map(ch =>
+          <Tabs.Tab key={ch.id} value={ch.id}>{ch.name}</Tabs.Tab>,
+        )}
       </Tabs.List>
     </Tabs>
     {loadingCharacter

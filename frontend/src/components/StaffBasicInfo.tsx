@@ -1,14 +1,14 @@
 import { Anchor, Image, Text, Title } from '@mantine/core'
 import { CakeIcon, TwitterLogoIcon } from '@phosphor-icons/react'
 
-import { Participant } from '@/api/types'
+import { Character } from '@/api/characters'
 import { YEAR_MAP } from '@/lib/classes'
 
 import verifiedImage from '@/assets/images/verified.png'
 
-export type StudentBasicInfoProps = Participant
+export type StaffBasicInfoProps = Character
 
-const StudentBasicInfo = (props: StudentBasicInfoProps) => {
+const StaffBasicInfo = (props: StaffBasicInfoProps) => {
   const {
     name,
     nameEn,
@@ -71,7 +71,7 @@ const StudentBasicInfo = (props: StudentBasicInfoProps) => {
     <Text size="sm"></Text>
     {unit && <Text size="sm">單位：{unit}</Text>}
     {title && <Text size="sm">
-      {year && <>{YEAR_MAP[year]}年 {studentClass} 班</>}
+      {year !== null && <>{YEAR_MAP[year]}年 {studentClass} 班</>}
       {title}</Text>}
     {major && <Text size="sm">{major}</Text>}
     {race && <Text size="sm">種族：{race}</Text>}
@@ -79,4 +79,4 @@ const StudentBasicInfo = (props: StudentBasicInfoProps) => {
   </>
 }
 
-export default StudentBasicInfo
+export default StaffBasicInfo

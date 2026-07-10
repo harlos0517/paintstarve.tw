@@ -19,11 +19,16 @@ export interface UserListFilters {
   per?: number
 }
 
+export interface UserListResult {
+  users: AdminUser[]
+  total: number
+}
+
 export const listAdminUsers = async(filters: UserListFilters = {}) => {
-  const { data } = await backendClient.get<{ users: AdminUser[] }>(
+  const { data } = await backendClient.get<UserListResult>(
     '/api/v1/admin/users', { params: filters },
   )
-  return data.users
+  return data
 }
 
 export const approveUser = async(userId: string, action: 'APPROVE' | 'REJECT') => {

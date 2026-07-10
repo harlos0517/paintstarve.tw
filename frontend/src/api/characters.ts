@@ -47,6 +47,11 @@ export interface ListCharacter {
   verified: boolean
 }
 
+export interface CharacterListResult<T> {
+  characters: T[]
+  total: number
+}
+
 // Fields a character owner ("me") is allowed to edit about their own character.
 export interface MeCharacterUpdateInput {
   nameEn?: string | null
@@ -75,10 +80,10 @@ export interface AdminCharacterUpdateInput extends MeCharacterUpdateInput {
 }
 
 export const listMeCharacters = async(filters: CharacterListFilters = {}) => {
-  const { data } = await backendClient.get<{ characters: ListCharacter[] }>(
+  const { data } = await backendClient.get<CharacterListResult<ListCharacter>>(
     '/api/v1/me/characters', { params: filters },
   )
-  return data.characters
+  return data
 }
 
 export const getMeCharacter = async(characterId: string) => {
@@ -96,10 +101,10 @@ export const updateMeCharacter = async(characterId: string, input: MeCharacterUp
 }
 
 export const listAdminCharacters = async(filters: CharacterListFilters = {}) => {
-  const { data } = await backendClient.get<{ characters: ListCharacter[] }>(
+  const { data } = await backendClient.get<CharacterListResult<ListCharacter>>(
     '/api/v1/admin/characters', { params: filters },
   )
-  return data.characters
+  return data
 }
 
 export const getAdminCharacter = async(characterId: string) => {
@@ -114,6 +119,13 @@ export const updateAdminCharacter = async(
 ) => {
   const { data } = await backendClient.patch<{ success: boolean }>(
     `/api/v1/admin/characters/${characterId}`, input,
+  )
+  return data
+}
+
+export const listPublicCharacters = async(filters: CharacterListFilters = {}) => {
+  const { data } = await backendClient.get<CharacterListResult<Character>>(
+    '/api/v1/public/characters', { params: filters },
   )
   return data
 }

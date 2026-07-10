@@ -1,17 +1,19 @@
-import { Box, Button, Container, Divider, Group, SimpleGrid, Stack, Title } from '@mantine/core'
+import {
+  Alert, Box, Button, Center, Container, Divider, Group, Loader, SimpleGrid, Stack, Title,
+} from '@mantine/core'
 import { useHover, useMediaQuery } from '@mantine/hooks'
 import { ArrowLeftIcon } from '@phosphor-icons/react'
-import { useContext, useState } from 'react'
+import { useState } from 'react'
 import { NavLink, useParams } from 'react-router-dom'
 
-import { Participant } from '@/api/types'
-import GlobalContext from '@/components/GlobalContext'
+import { Character } from '@/api/characters'
 import { IdCardImage } from '@/components/IdCardImage'
 import ParticipantInfoCard from '@/components/ParticipantInfoCard'
+import { usePublicCharacterList } from '@/hooks/useCharacters'
 import { COLS, getClass, ROWS, YEAR_MAP } from '@/lib/classes'
 
 type SeatProps = {
-  student?: Participant
+  student?: Character
 }
 
 const Seat = ({ student }: SeatProps) => {
@@ -30,7 +32,6 @@ const Seat = ({ student }: SeatProps) => {
       ref={ref} onClick={() => setShowDetail(true)}
     >
       <IdCardImage
-        src={student?.idCardImageUrl}
         alt={student?.name}
         size={seatSize}
         bdrs="md"
@@ -45,17 +46,22 @@ const Seat = ({ student }: SeatProps) => {
 
 const Clazz = () => {
   const { clazz } = useParams()
-  const { students: allStudents } = useContext(GlobalContext)
 
   const year = Number(clazz?.[0])
-  const clazzName = clazz?.[1]
-  const clazzInfo = getClass(year, clazzName || '')
+  const clazzName = clazz?.[1] ?? ''
+  const clazzInfo = getClass(year, clazzName)
+
+  // A class has at most ROWS x COLS (40) seats, well within a single page.
+  const { data, loading, error } = usePublicCharacterList({
+    year, class: clazzName, per: 100,
+  })
 
   if (!clazzInfo) return <Container p="md"><Title order={2}>{'404 :('}</Title></Container>
+  if (loading) return <Center h="50vh"><Loader /></Center>
+  if (error) return <Alert color="red" m="md">無法載入學生資料。</Alert>
 
-  const classCode = clazzName ? clazzName.charCodeAt(0) - 64 : 0
+  const classCode = clazzName.charCodeAt(0) - 64
   const fullClassCode = `${year}0${classCode}`
-  const classStudents = allStudents.filter(s => s.class === clazzName && s.year === year)
 
   return <Container p="md">
     <Group justify="space-between" mb="md">
@@ -70,7 +76,7 @@ const Clazz = () => {
     <SimpleGrid cols={5} spacing="md">
       {ROWS.slice(0, clazzInfo?.rows).map(row => {
         return COLS.map(column => {
-          const student = classStudents.find(s => s.seatRow === row && s.seatColumn === column)
+          const student = data?.characters.find(s => s.seatRow === row && s.seatColumn === column)
           return <Seat
             key={student?.seatId || `${fullClassCode}0${row}0${column}`}
             student={student}

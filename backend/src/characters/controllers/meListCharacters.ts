@@ -12,19 +12,22 @@ const meListCharacters = defaultEndpointsFactory
     input: characterListFilterInput,
     output: z.object({
       characters: z.array(characterListOutput),
+      total: z.number().int(),
     }),
     handler: async({ input, ctx }) => {
-      const characters = await Character.findMany({
-        where: {
-          ...buildCharacterListWhere(input),
-          userId: ctx.user.id,
-        },
-        skip: (input.page - 1) * input.per,
-        take: input.per,
-        select: characterListSelect,
-      })
+      const where = { ...buildCharacterListWhere(input), userId: ctx.user.id }
 
-      return { characters }
+      const [characters, total] = await Promise.all([
+        Character.findMany({
+          where,
+          skip: (input.page - 1) * input.per,
+          take: input.per,
+          select: characterListSelect,
+        }),
+        Character.count({ where }),
+      ])
+
+      return { characters, total }
     },
   })
 
