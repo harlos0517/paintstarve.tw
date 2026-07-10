@@ -1,5 +1,6 @@
 import { parse } from 'csv-parse/sync'
 import { defaultEndpointsFactory, ez } from 'express-zod-api'
+import createHttpError from 'http-errors'
 import { z } from 'zod'
 
 import { Character, Image } from '../../db'
@@ -42,11 +43,17 @@ const adminImportCharactersCsv = defaultEndpointsFactory
       })),
     }),
     handler: async({ input, ctx }) => {
-      const records: Record<string, string>[] = parse(input.file.data, {
-        columns: true,
-        skip_empty_lines: true,
-        trim: true,
-      })
+      let records: Record<string, string>[]
+      try {
+        records = parse(input.file.data, {
+          columns: true,
+          skip_empty_lines: true,
+          trim: true,
+        })
+      } catch(err) {
+        const message = err instanceof Error ? err.message : String(err)
+        throw createHttpError(400, `無法解析 CSV 檔案：${message}`)
+      }
 
       let created = 0
       let updated = 0
