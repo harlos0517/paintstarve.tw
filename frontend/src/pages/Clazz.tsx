@@ -7,8 +7,8 @@ import { useState } from 'react'
 import { NavLink, useParams } from 'react-router-dom'
 
 import { Character } from '@/api/characters'
-import { IdCardImage } from '@/components/IdCardImage'
 import CharacterInfoCard from '@/components/CharacterInfoCard'
+import { IdCardImage } from '@/components/IdCardImage'
 import { usePublicCharacterList } from '@/hooks/useCharacters'
 import { COLS, getClass, ROWS, YEAR_MAP } from '@/lib/classes'
 
@@ -32,6 +32,7 @@ const Seat = ({ student }: SeatProps) => {
       ref={ref} onClick={() => setShowDetail(true)}
     >
       <IdCardImage
+        src={student?.idCardImageUrls?.[0]}
         alt={student?.name}
         size={seatSize}
         bdrs="md"
