@@ -54,8 +54,6 @@ const CharacterForm = ({ character, mode, refetch }: CharacterFormProps) => {
   const [birthday, setBirthday] = useState(splitBirthday(character?.birthday ?? null))
 
   const [name, setName] = useState(character?.name ?? '')
-  const [season, setSeason] = useState(character?.season ?? '')
-  const [seatId, setSeatId] = useState(character?.seatId ?? '')
   const [role, setRole] = useState<CharacterRole>(character?.role ?? 'STUDENT')
   const [year, setYear] = useState<number | ''>(character?.year ?? '')
   const [studentClass, setStudentClass] = useState(character?.class ?? '')
@@ -108,8 +106,6 @@ const CharacterForm = ({ character, mode, refetch }: CharacterFormProps) => {
     const adminInput: AdminCharacterUpdateInput = {
       ...base,
       name,
-      season,
-      seatId,
       role,
       year: year === '' ? null : year,
       class: studentClass || null,
@@ -155,16 +151,10 @@ const CharacterForm = ({ character, mode, refetch }: CharacterFormProps) => {
           />
         </Grid.Col>
         <Grid.Col span={4}>
-          <TextInput
-            label="梯次" value={season} disabled={!isAdmin} required
-            onChange={e => setSeason(e.currentTarget.value)}
-          />
+          <TextInput label="梯次" value={character.season} disabled />
         </Grid.Col>
         <Grid.Col span={4}>
-          <TextInput
-            label="座位編號" value={seatId} disabled={!isAdmin} required
-            onChange={e => setSeatId(e.currentTarget.value)}
-          />
+          <TextInput label="編號" value={character.seatId} disabled />
         </Grid.Col>
         <Grid.Col span={4}>
           <Select

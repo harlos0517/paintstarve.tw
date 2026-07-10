@@ -75,10 +75,9 @@ export interface MeCharacterUpdateInput {
   twitter?: string | null
 }
 
-// Admins can edit every column.
+// Admins can edit every column except season/seatId - a character's seat
+// identity is fixed once created (also enforced by a DB unique constraint).
 export interface AdminCharacterUpdateInput extends MeCharacterUpdateInput {
-  season?: string
-  seatId?: string
   userId?: string | null
   role?: CharacterRole
   name?: string
