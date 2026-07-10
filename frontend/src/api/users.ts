@@ -3,12 +3,21 @@ import backendClient from '@/api/backendClient'
 export type UserRole = 'USER' | 'ADMIN'
 export type UserVerifyStatus = 'PENDING' | 'VERIFIED' | 'REJECTED'
 
+export interface AdminUserPendingClaim {
+  id: string
+  character: {
+    id: string
+    name: string
+  }
+}
+
 export interface AdminUser {
   id: string
   name: string
   email: string
   role: UserRole
   verifyStatus: UserVerifyStatus
+  characterClaims: AdminUserPendingClaim[]
 }
 
 export interface UserListFilters {

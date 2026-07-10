@@ -26,6 +26,7 @@ import {
 import UserPicker from '@/components/admin/UserPicker'
 import {
   useAdminCharacter,
+  useMeCharacter,
   useUpdateAdminCharacter,
   useUpdateMeCharacter,
 } from '@/hooks/useCharacters'
@@ -60,7 +61,7 @@ const CharacterForm = ({ character, mode, refetch }: CharacterFormProps) => {
   const [seatColumn, setSeatColumn] = useState<number | ''>(character?.seatColumn ?? '')
   const [cardId, setCardId] = useState(character?.cardId ?? '')
   const [verified, setVerified] = useState(character?.verified ?? false)
-  const [userId, setUserId] = useState(character?.userId ?? '')
+  const [userId, setUserId] = useState<string | null>(character?.userId ?? null)
 
   const { mutate: updateAdminCharacter, loading: adminSaving } = useUpdateAdminCharacter()
   const { mutate: updateMeCharacter, loading: meSaving } = useUpdateMeCharacter()
@@ -281,7 +282,9 @@ const splitBirthday = (birthday: string | null) => {
 }
 
 const CharacterEditor = ({ characterId, mode }: CharacterEditorProps) => {
-  const { data: character, loading, error, refetch } = useAdminCharacter(characterId)
+  const adminQuery = useAdminCharacter(characterId)
+  const meQuery = useMeCharacter(characterId)
+  const { data: character, loading, error, refetch } = mode === 'admin' ? adminQuery : meQuery
 
   if (error) return <Alert color="red">無法載入角色資料。</Alert>
   if (!loading && !character) return <Alert color="red">找不到此角色。</Alert>

@@ -1,6 +1,7 @@
 import { Alert, Badge, Button, Group, Stack, Text, TextInput, Title } from '@mantine/core'
 import { useState } from 'react'
 
+import CharacterClaimPicker from '@/components/admin/CharacterClaimPicker'
 import { authClient } from '@/lib/auth-client'
 
 const ROLE_LABEL: Record<string, string> = { USER: '使用者', ADMIN: '管理員' }
@@ -59,6 +60,7 @@ const AdminMe = () => {
     </Group>
     {error && <Alert color="red">{error}</Alert>}
     {saved && <Alert color="green">已儲存</Alert>}
+    <CharacterClaimPicker />
   </Stack>
 }
 

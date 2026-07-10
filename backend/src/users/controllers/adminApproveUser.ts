@@ -2,7 +2,8 @@ import { defaultEndpointsFactory } from 'express-zod-api'
 import { z } from 'zod'
 
 import { UserVerifiedStatus } from '../../../generated/prisma/enums'
-import { User } from '../../db'
+import { rejectClaim, resolveClaim } from '../../characterClaims/services/resolveClaim'
+import db from '../../db'
 import { adminAuthMiddleware } from '../../middlewares/auth'
 
 const adminApproveUser = defaultEndpointsFactory
@@ -23,9 +24,20 @@ const adminApproveUser = defaultEndpointsFactory
         ? { verifyStatus: UserVerifiedStatus.VERIFIED }
         : { verifyStatus: UserVerifiedStatus.REJECTED }
 
-      await User.updateMany({
-        where: { id: userId },
-        data: updateData,
+      // Approving the user also auto-processes their pending character claims,
+      // so admins don't have to separately go link characters afterward.
+      await db.$transaction(async tx => {
+        await tx.user.updateMany({ where: { id: userId }, data: updateData })
+
+        const pendingClaims = await tx.characterClaimRequest.findMany({
+          where: { userId, status: 'PENDING' },
+          select: { id: true, characterId: true },
+        })
+
+        for (const claim of pendingClaims) {
+          if (action === 'REJECT') await rejectClaim(tx, claim.id)
+          else await resolveClaim(tx, { id: claim.id, userId, characterId: claim.characterId })
+        }
       })
 
       return { success: true }

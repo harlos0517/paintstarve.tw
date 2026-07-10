@@ -1,5 +1,5 @@
 import {
-  Alert, Badge, Button, Group, Pagination, Select, Table, TextInput, Title,
+  Alert, Badge, Button, Group, Pagination, Select, Table, Text, TextInput, Title,
 } from '@mantine/core'
 import { useState } from 'react'
 
@@ -87,6 +87,7 @@ const AdminUsersContent = () => {
           <Table.Th>姓名</Table.Th>
           <Table.Th>Email</Table.Th>
           <Table.Th>審核狀態</Table.Th>
+          <Table.Th>認領角色</Table.Th>
           <Table.Th>審核</Table.Th>
           <Table.Th>身份</Table.Th>
         </Table.Tr>
@@ -99,6 +100,15 @@ const AdminUsersContent = () => {
             <Badge color={VERIFY_STATUS_COLOR[user.verifyStatus]} variant="light">
               {VERIFY_STATUS_LABEL[user.verifyStatus]}
             </Badge>
+          </Table.Td>
+          <Table.Td>
+            {user.characterClaims.length === 0
+              ? <Text size="sm" c="dimmed">—</Text>
+              : user.characterClaims.map(claim => (
+                <Text key={claim.id} size="sm">
+                  {claim.character.name}
+                </Text>
+              ))}
           </Table.Td>
           <Table.Td>
             <Group gap="xs">

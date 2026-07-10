@@ -9,7 +9,7 @@ interface CharacterCsvRow {
   updatedAt: Date
   season: string
   seatId: string
-  userId: string
+  userId: string | null
   role: 'STUDENT' | 'STAFF'
   name: string
   nameEn: string | null
@@ -39,7 +39,7 @@ export const stringifyCharactersToCsv = (characters: CharacterCsvRow[]) => {
     id: character.id,
     season: character.season,
     seatId: character.seatId,
-    userId: character.userId,
+    userId: character.userId ?? '',
     role: character.role,
     name: character.name,
     nameEn: character.nameEn ?? '',

@@ -34,7 +34,7 @@ export const characterOutput = z.object({
   updatedAt: ez.dateOut(),
   season: z.string(),
   seatId: z.string(),
-  userId: z.string(),
+  userId: z.string().nullable(),
   role: z.enum(['STUDENT', 'STAFF']),
   name: z.string(),
   nameEn: z.string().nullable(),

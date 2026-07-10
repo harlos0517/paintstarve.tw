@@ -29,6 +29,12 @@ enum WorkVerifiedStatus {
   REJECTED
 }
 
+enum CharacterClaimStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 model User {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
@@ -41,9 +47,10 @@ model User {
   role          UserRole           @default(USER)
   verifyStatus  UserVerifiedStatus @default(PENDING)
 
-  characters     Character[]
-  uploadedImages Image[]     @relation("UserUploadedImages")
-  works          Work[]
+  characters      Character[]
+  characterClaims CharacterClaimRequest[]
+  uploadedImages  Image[]                 @relation("UserUploadedImages")
+  works           Work[]
 
   // Better Auth required relations
   sessions Session[]
@@ -114,7 +121,7 @@ model Character {
 
   season      String
   seatId      String
-  userId      String
+  userId      String?
   role        CharacterRole @default(STUDENT)
   name        String
   nameEn      String?
@@ -132,9 +139,25 @@ model Character {
   verified    Boolean       @default(false)
   twitter     String?
 
-  user         User?           @relation(fields: [userId], references: [id])
-  idCardImages Image[]         @relation("CharacterIdCardImages")
+  user         User?                   @relation(fields: [userId], references: [id])
+  idCardImages Image[]                 @relation("CharacterIdCardImages")
   works        WorkCharacter[]
+  claims       CharacterClaimRequest[]
+}
+
+model CharacterClaimRequest {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId      String
+  characterId String
+  status      CharacterClaimStatus @default(PENDING)
+
+  user      User      @relation(fields: [userId], references: [id])
+  character Character @relation(fields: [characterId], references: [id])
+
+  @@unique([userId, characterId])
 }
 
 model Image {

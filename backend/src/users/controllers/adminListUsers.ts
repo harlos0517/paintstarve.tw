@@ -22,6 +22,13 @@ const adminListUsers = defaultEndpointsFactory
           email: z.string(),
           role: z.enum(['USER', 'ADMIN']),
           verifyStatus: z.enum(['PENDING', 'VERIFIED', 'REJECTED']),
+          characterClaims: z.array(z.object({
+            id: z.string(),
+            character: z.object({
+              id: z.string(),
+              name: z.string(),
+            }),
+          })),
         }),
       ),
       total: z.number().int(),
@@ -44,6 +51,15 @@ const adminListUsers = defaultEndpointsFactory
             email: true,
             role: true,
             verifyStatus: true,
+            characterClaims: {
+              where: { status: 'PENDING' },
+              select: {
+                id: true,
+                character: {
+                  select: { id: true, name: true },
+                },
+              },
+            },
           },
         }),
         User.count({ where }),

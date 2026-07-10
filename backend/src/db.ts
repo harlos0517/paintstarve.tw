@@ -16,9 +16,16 @@ export const Account = prisma.account
 export const Verification = prisma.verification
 
 export const Character = prisma.character
+export const CharacterClaimRequest = prisma.characterClaimRequest
 export const Image = prisma.image
 export const Work = prisma.work
 export const WorkImage = prisma.workImage
 export const WorkCharacter = prisma.workCharacter
 
-export { CharacterRole, UserRole, UserVerifiedStatus } from '../generated/prisma/enums'
+export {
+  CharacterClaimStatus,
+  CharacterRole,
+  UserRole,
+  UserVerifiedStatus,
+} from '../generated/prisma/enums'
+

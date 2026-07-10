@@ -13,6 +13,7 @@ import {
 import { GoogleLogoIcon } from '@phosphor-icons/react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 
+import CharacterClaimPicker from '@/components/admin/CharacterClaimPicker'
 import { authClient } from '@/lib/auth-client'
 
 const Login = () => <Container size="xs" pt="xl">
@@ -33,7 +34,7 @@ const Login = () => <Container size="xs" pt="xl">
 const VerifyStatusAlert = ({ status }: { status: 'PENDING' | 'REJECTED' }) => {
   const message = status === 'REJECTED'
     ? '您的帳號申請已被拒絕，請聯繫管理員。'
-    : '您的帳號正在等待管理員審核，請稍後再試。'
+    : '您的帳號正在等待管理員審核，請稍後再試。你可以先提出角色認領申請，帳號審核通過後會自動連結。'
 
   return <Container size="xs" pt="xl">
     <Stack align="center">
@@ -41,6 +42,7 @@ const VerifyStatusAlert = ({ status }: { status: 'PENDING' | 'REJECTED' }) => {
         {message}
       </Alert>
       <Button variant="default" onClick={() => authClient.signOut()}>登出</Button>
+      {status === 'PENDING' && <CharacterClaimPicker />}
     </Stack>
   </Container>
 }
@@ -63,6 +65,7 @@ const NavTabs = ({ isAdmin }: { isAdmin: boolean }) => {
       priority: 1,
     },
     { key: 'users', label: '使用者管理', path: '/admin/users' },
+    { key: 'character-claims', label: '角色認領申請', path: '/admin/character-claims' },
   ]
 
   const tabs = isAdmin ? [...userTabs, ...adminTabs] : userTabs

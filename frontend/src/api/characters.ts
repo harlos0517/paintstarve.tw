@@ -8,7 +8,7 @@ export interface Character {
   updatedAt: string
   season: string
   seatId: string
-  userId: string
+  userId: string | null
   role: CharacterRole
   name: string
   nameEn: string | null
@@ -80,7 +80,7 @@ export interface MeCharacterUpdateInput {
 export interface AdminCharacterUpdateInput extends MeCharacterUpdateInput {
   season?: string
   seatId?: string
-  userId?: string
+  userId?: string | null
   role?: CharacterRole
   name?: string
   cardId?: string | null

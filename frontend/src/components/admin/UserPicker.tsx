@@ -8,7 +8,7 @@ import { CheckIcon } from '@phosphor-icons/react'
 interface UserPickerProps {
   currentUser?: CharacterOwner | null
   userId?: string | null
-  onChange: (userId: string) => void
+  onChange: (userId: string | null) => void
   disabled?: boolean
 }
 
@@ -48,8 +48,10 @@ const UserPicker = ({
     <Select
       flex={1}
       label="所屬使用者"
+      placeholder="尚未認領"
       disabled={disabled}
       searchable
+      clearable
       value={userId}
       data={options}
       renderOption={({ option, checked }) => {
@@ -61,8 +63,12 @@ const UserPicker = ({
       }}
       searchValue={search}
       onChange={v => {
-        if (!v) return
         onChange(v)
+        if (!v) {
+          setSearch('')
+          setEmail('')
+          return
+        }
         const selected = options.find(o => o.value === v)
         if (selected) {
           setSearch(userMap[v]?.name || '')

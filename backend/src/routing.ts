@@ -1,5 +1,10 @@
 import { type Routing } from 'express-zod-api'
 
+import adminListCharacterClaims from './characterClaims/controllers/adminListCharacterClaims.js'
+import adminResolveCharacterClaim from './characterClaims/controllers/adminResolveCharacterClaim.js'
+import meCreateCharacterClaim from './characterClaims/controllers/meCreateCharacterClaim.js'
+import meDeleteCharacterClaim from './characterClaims/controllers/meDeleteCharacterClaim.js'
+import meListCharacterClaims from './characterClaims/controllers/meListCharacterClaims.js'
 import adminExportCharactersCsv from './characters/controllers/adminExportCharactersCsv.js'
 import adminGetCharacter from './characters/controllers/adminGetCharacter.js'
 import adminImportCharactersCsv from './characters/controllers/adminImportCharactersCsv.js'
@@ -30,6 +35,15 @@ const routing: Routing = {
           patch: meUpdateCharacter,
         },
       },
+      'character-claims': {
+        '/': {
+          get: meListCharacterClaims,
+          post: meCreateCharacterClaim,
+        },
+        ':claimId': {
+          delete: meDeleteCharacterClaim,
+        },
+      },
     },
     admin: {
       users: {
@@ -46,6 +60,12 @@ const routing: Routing = {
         ':characterId': {
           get: adminGetCharacter,
           patch: adminUpdateCharacter,
+        },
+      },
+      'character-claims': {
+        '/': adminListCharacterClaims,
+        ':claimId': {
+          patch: adminResolveCharacterClaim,
         },
       },
     },

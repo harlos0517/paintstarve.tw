@@ -13,7 +13,7 @@ const adminUpdateCharacter = defaultEndpointsFactory
       characterId: z.string(),
       season: z.string().optional(),
       seatId: z.string().optional(),
-      userId: z.string().optional(),
+      userId: z.string().nullable().optional(),
       role: z.enum(['STUDENT', 'STAFF']).optional(),
       name: z.string().optional(),
       nameEn: z.string().nullable().optional(),
