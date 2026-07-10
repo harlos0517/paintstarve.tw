@@ -35,8 +35,20 @@ const adminApproveUser = defaultEndpointsFactory
         })
 
         for (const claim of pendingClaims) {
-          if (action === 'REJECT') await rejectClaim(tx, claim.id)
-          else await resolveClaim(tx, { id: claim.id, userId, characterId: claim.characterId })
+          if (action === 'REJECT') {
+            await rejectClaim(tx, claim.id)
+            continue
+          }
+
+          const linked = await resolveClaim(
+            tx, { id: claim.id, userId, characterId: claim.characterId },
+          )
+          if (linked) {
+            await tx.character.update({
+              where: { id: claim.characterId },
+              data: { verified: true },
+            })
+          }
         }
       })
 

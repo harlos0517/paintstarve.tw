@@ -95,7 +95,7 @@ const adminImportCharactersCsv = defaultEndpointsFactory
             season: rest.season,
             seatId: rest.seatId,
             name: rest.name,
-            userId: userId ?? ctx.user.id,
+            userId,
           },
         })
         await linkIdCardImage(character.id, rawRow.fileId?.trim(), ctx.user.id)
