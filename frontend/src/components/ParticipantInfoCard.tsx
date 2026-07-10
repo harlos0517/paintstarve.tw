@@ -14,6 +14,7 @@ const ParticipantInfoCard = (props: ParticipantInfoCardProps) => {
     role,
     name,
     description,
+    idCardImageUrls,
     setShowDetail,
   } = props
 
@@ -45,7 +46,7 @@ const ParticipantInfoCard = (props: ParticipantInfoCardProps) => {
         <Card.Section>
           <Stack>
             <Group wrap="nowrap">
-              <IdCardImage bdrs="md" alt={name} />
+              <IdCardImage bdrs="md" alt={name} src={idCardImageUrls[0]} />
               <Box mih="12rem">{basicInfo}</Box>
             </Group>
             {description && <>

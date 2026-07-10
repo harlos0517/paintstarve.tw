@@ -2,11 +2,29 @@ import { parse } from 'csv-parse/sync'
 import { defaultEndpointsFactory, ez } from 'express-zod-api'
 import { z } from 'zod'
 
-import { Character } from '../../db'
+import { Character, Image } from '../../db'
 import { adminAuthMiddleware } from '../../middlewares/auth'
 import {
   cleanCsvRow, csvImportColumns, csvRowInput, formatZodIssues,
 } from '../services/characterCsv'
+
+// `fileId` isn't a Character column - it's the legacy spreadsheet's reference
+// to the character's ID card scan, already sitting in R2 at id_card/{fileId}.jpg.
+// Handled separately from csvImportColumns/csvRowInput since it doesn't map
+// onto the Character table at all. Upserting on storageKey (which is unique)
+// keeps re-imports idempotent instead of erroring on a duplicate key.
+const linkIdCardImage = async(
+  characterId: string, fileId: string | undefined, uploadedByUserId: string,
+) => {
+  if (!fileId) return
+
+  const storageKey = `id_card/${fileId}.jpg`
+  await Image.upsert({
+    where: { storageKey },
+    create: { storageKey, uploadedByUserId, idCardForCharacterId: characterId },
+    update: { idCardForCharacterId: characterId },
+  })
+}
 
 const adminImportCharactersCsv = defaultEndpointsFactory
   .addMiddleware(adminAuthMiddleware)
@@ -54,6 +72,7 @@ const adminImportCharactersCsv = defaultEndpointsFactory
               ...(userId ? { userId } : {}),
             },
           })
+          await linkIdCardImage(existing.id, rawRow.fileId?.trim(), ctx.user.id)
           updated += 1
           continue
         }
@@ -70,7 +89,7 @@ const adminImportCharactersCsv = defaultEndpointsFactory
           continue
         }
 
-        await Character.create({
+        const character = await Character.create({
           data: {
             ...rest,
             season: rest.season,
@@ -79,6 +98,7 @@ const adminImportCharactersCsv = defaultEndpointsFactory
             userId: userId ?? ctx.user.id,
           },
         })
+        await linkIdCardImage(character.id, rawRow.fileId?.trim(), ctx.user.id)
         created += 1
       }
 

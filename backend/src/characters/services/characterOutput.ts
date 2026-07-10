@@ -1,6 +1,7 @@
 import { ez } from 'express-zod-api'
 import { z } from 'zod'
 
+import { buildImagePublicUrl } from '../../images/services/r2Storage'
 import { formatMonthDay } from './birthday'
 
 export const characterSelect = {
@@ -26,6 +27,9 @@ export const characterSelect = {
   description: true,
   verified: true,
   twitter: true,
+  idCardImages: {
+    select: { storageKey: true },
+  },
 } as const
 
 export const characterOutput = z.object({
@@ -51,11 +55,13 @@ export const characterOutput = z.object({
   description: z.string().nullable(),
   verified: z.boolean(),
   twitter: z.string().nullable(),
+  idCardImageUrls: z.array(z.string()),
 })
 
-// Used for single-character detail endpoints that need to display/reassign
-// the linked account. Left out of the public output/select - the account's
-// name and email aren't meant to be publicly exposed.
+// All character data (including ID card images) is fictional role-play
+// content and meant to be public. The linked account is the one exception -
+// that's a real person's real name/email, so it's kept out of the public
+// select/output and only added for the me/admin detail endpoints.
 export const characterDetailSelect = {
   ...characterSelect,
   user: {
@@ -74,6 +80,16 @@ export const characterDetailOutput = characterOutput.extend({
     email: z.string(),
   }).nullable(),
 })
+
+export const toCharacterOutput = <T extends { idCardImages: { storageKey: string }[] }>(
+  character: T,
+) => {
+  const { idCardImages, ...rest } = character
+  return {
+    ...rest,
+    idCardImageUrls: idCardImages.map(image => buildImagePublicUrl(image.storageKey)),
+  }
+}
 
 export const characterListSelect = {
   id: true,

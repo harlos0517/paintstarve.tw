@@ -25,6 +25,7 @@ export interface Character {
   description: string | null
   verified: boolean
   twitter: string | null
+  idCardImageUrls: string[]
 }
 
 export interface CharacterListFilters {
@@ -58,8 +59,6 @@ export interface CharacterOwner {
   email: string
 }
 
-// The me/admin single-character endpoints also embed the linked account
-// (not exposed publicly, so this is distinct from the plain Character type).
 export interface CharacterDetail extends Character {
   user: CharacterOwner | null
 }

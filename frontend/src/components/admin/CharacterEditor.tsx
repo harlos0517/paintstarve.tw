@@ -1,11 +1,13 @@
 import {
   ActionIcon,
   Alert,
+  Anchor,
   Box,
   Button,
   Checkbox,
   Grid,
   Group,
+  Image,
   LoadingOverlay,
   NumberInput,
   Select,
@@ -136,84 +138,97 @@ const CharacterForm = ({ character, mode, refetch }: CharacterFormProps) => {
       <ActionIcon variant="transparent" onClick={copyIdToClipboard}><CopyIcon /></ActionIcon>
       {copied && <CheckIcon color="green" />}
     </Title>
+
     <Text fw={700}>基本資料{!isAdmin && '（唯讀，如有錯誤請聯繫管理員）'}</Text>
-    <Grid>
-      <Grid.Col span={6}>
-        <TextInput
-          label="名字" value={name} disabled={!isAdmin} required
-          onChange={e => setName(e.currentTarget.value)}
-        />
-      </Grid.Col>
-      <Grid.Col span={6}>
-        <TextInput
-          label="英文名/別名" value={nameEn}
-          onChange={e => setNameEn(e.currentTarget.value)}
-        />
-      </Grid.Col>
-      <Grid.Col span={4}>
-        <TextInput
-          label="梯次" value={season} disabled={!isAdmin} required
-          onChange={e => setSeason(e.currentTarget.value)}
-        />
-      </Grid.Col>
-      <Grid.Col span={4}>
-        <TextInput
-          label="座位編號" value={seatId} disabled={!isAdmin} required
-          onChange={e => setSeatId(e.currentTarget.value)}
-        />
-      </Grid.Col>
-      <Grid.Col span={4}>
-        <Select
-          label="身份" value={role} disabled={!isAdmin}
-          data={[{ value: 'STUDENT', label: '學生' }, { value: 'STAFF', label: '教職員' }]}
-          onChange={value => setRole((value as CharacterRole) ?? role)}
-        />
-      </Grid.Col>
-      <Grid.Col span={3}>
-        <NumberInput
-          label="年級" value={year} disabled={!isAdmin}
-          onChange={v => setYear(v === '' ? '' : Number(v))}
-        />
-      </Grid.Col>
-      <Grid.Col span={3}>
-        <TextInput
-          label="班級" value={studentClass} disabled={!isAdmin}
-          onChange={e => setStudentClass(e.currentTarget.value)}
-        />
-      </Grid.Col>
-      <Grid.Col span={3}>
-        <NumberInput
-          label="排" value={seatRow} disabled={!isAdmin}
-          onChange={v => setSeatRow(v === '' ? '' : Number(v))}
-        />
-      </Grid.Col>
-      <Grid.Col span={3}>
-        <NumberInput
-          label="號" value={seatColumn} disabled={!isAdmin}
-          onChange={v => setSeatColumn(v === '' ? '' : Number(v))}
-        />
-      </Grid.Col>
-      <Grid.Col span={3}>
-        <TextInput
-          label={isStudent ? '學生證編號' : '教職證編號'} value={cardId} disabled={!isAdmin}
-          onChange={e => setCardId(e.currentTarget.value)}
-        />
-      </Grid.Col>
-      <Grid.Col span={9}>
-        <UserPicker
-          currentUser={character?.user}
-          userId={userId}
-          disabled={!isAdmin}
-          onChange={setUserId}
-        />
-      </Grid.Col>
-      <Grid.Col span={6}>
-        <Checkbox
-          mt="1.5rem" label="已認證" checked={verified} disabled={!isAdmin}
-          onChange={e => setVerified(e.currentTarget.checked)}
-        />
-      </Grid.Col>
-    </Grid>
+    <Group wrap="nowrap" align="flex-start">
+      <Grid>
+        <Grid.Col span={6}>
+          <TextInput
+            label="名字" value={name} disabled={!isAdmin} required
+            onChange={e => setName(e.currentTarget.value)}
+          />
+        </Grid.Col>
+        <Grid.Col span={6}>
+          <TextInput
+            label="英文名/別名" value={nameEn}
+            onChange={e => setNameEn(e.currentTarget.value)}
+          />
+        </Grid.Col>
+        <Grid.Col span={4}>
+          <TextInput
+            label="梯次" value={season} disabled={!isAdmin} required
+            onChange={e => setSeason(e.currentTarget.value)}
+          />
+        </Grid.Col>
+        <Grid.Col span={4}>
+          <TextInput
+            label="座位編號" value={seatId} disabled={!isAdmin} required
+            onChange={e => setSeatId(e.currentTarget.value)}
+          />
+        </Grid.Col>
+        <Grid.Col span={4}>
+          <Select
+            label="身份" value={role} disabled={!isAdmin}
+            data={[{ value: 'STUDENT', label: '學生' }, { value: 'STAFF', label: '教職員' }]}
+            onChange={value => setRole((value as CharacterRole) ?? role)}
+          />
+        </Grid.Col>
+        <Grid.Col span={3}>
+          <NumberInput
+            label="年級" value={year} disabled={!isAdmin}
+            onChange={v => setYear(v === '' ? '' : Number(v))}
+          />
+        </Grid.Col>
+        <Grid.Col span={3}>
+          <TextInput
+            label="班級" value={studentClass} disabled={!isAdmin}
+            onChange={e => setStudentClass(e.currentTarget.value)}
+          />
+        </Grid.Col>
+        <Grid.Col span={3}>
+          <NumberInput
+            label="排" value={seatRow} disabled={!isAdmin}
+            onChange={v => setSeatRow(v === '' ? '' : Number(v))}
+          />
+        </Grid.Col>
+        <Grid.Col span={3}>
+          <NumberInput
+            label="號" value={seatColumn} disabled={!isAdmin}
+            onChange={v => setSeatColumn(v === '' ? '' : Number(v))}
+          />
+        </Grid.Col>
+        <Grid.Col span={3}>
+          <TextInput
+            label={isStudent ? '學生證編號' : '教職證編號'} value={cardId} disabled={!isAdmin}
+            onChange={e => setCardId(e.currentTarget.value)}
+          />
+        </Grid.Col>
+        <Grid.Col span={9}>
+          <UserPicker
+            currentUser={character?.user}
+            userId={userId}
+            disabled={!isAdmin}
+            onChange={setUserId}
+          />
+        </Grid.Col>
+        <Grid.Col span={6}>
+          <Checkbox
+            mt="1.5rem" label="已認證" checked={verified} disabled={!isAdmin}
+            onChange={e => setVerified(e.currentTarget.checked)}
+          />
+        </Grid.Col>
+      </Grid>
+      {character.idCardImageUrls.length > 0 && <Box>
+        <Text fw={700}>證件照</Text>
+        <Group>
+          {character.idCardImageUrls.map(url => (
+            <Anchor key={url} href={url} target="_blank" rel="noopener noreferrer">
+              <Image src={url} h="16.5rem" w="auto" fit="contain" radius="sm" />
+            </Anchor>
+          ))}
+        </Group>
+      </Box>}
+    </Group>
 
     <Text fw={700} mt="md">角色設定</Text>
     <Grid>

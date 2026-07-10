@@ -3,7 +3,7 @@ import createHttpError from 'http-errors'
 import { z } from 'zod'
 
 import { Character } from '../../db'
-import { characterOutput, characterSelect } from '../services/characterOutput'
+import { characterOutput, characterSelect, toCharacterOutput } from '../services/characterOutput'
 
 const publicGetCharacter = defaultEndpointsFactory
   .build({
@@ -21,7 +21,7 @@ const publicGetCharacter = defaultEndpointsFactory
 
       if (!character) throw createHttpError(404)
 
-      return { character }
+      return { character: toCharacterOutput(character) }
     },
   })
 

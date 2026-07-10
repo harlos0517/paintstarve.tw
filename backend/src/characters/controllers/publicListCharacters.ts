@@ -3,7 +3,7 @@ import { z } from 'zod'
 
 import { Character } from '../../db'
 import { buildCharacterListWhere, characterListFilterInput } from '../services/characterFilters'
-import { characterOutput, characterSelect } from '../services/characterOutput'
+import { characterOutput, characterSelect, toCharacterOutput } from '../services/characterOutput'
 
 const publicListCharacters = defaultEndpointsFactory
   .build({
@@ -25,7 +25,7 @@ const publicListCharacters = defaultEndpointsFactory
         Character.count({ where }),
       ])
 
-      return { characters, total }
+      return { characters: characters.map(toCharacterOutput), total }
     },
   })
 

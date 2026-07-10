@@ -4,7 +4,11 @@ import { z } from 'zod'
 
 import { Character } from '../../db'
 import { adminAuthMiddleware } from '../../middlewares/auth'
-import { characterDetailOutput, characterDetailSelect } from '../services/characterOutput'
+import {
+  characterDetailOutput,
+  characterDetailSelect,
+  toCharacterOutput,
+} from '../services/characterOutput'
 
 const adminGetCharacter = defaultEndpointsFactory
   .addMiddleware(adminAuthMiddleware)
@@ -23,7 +27,7 @@ const adminGetCharacter = defaultEndpointsFactory
 
       if (!character) throw createHttpError(404)
 
-      return { character }
+      return { character: toCharacterOutput(character) }
     },
   })
 

@@ -13,6 +13,7 @@ const ParticipantListCard = (props: ParticipantListCardProps) => {
   const {
     role,
     name,
+    idCardImageUrls,
   } = props
 
   const [showDetail, setShowDetail] = useState(false)
@@ -31,7 +32,9 @@ const ParticipantListCard = (props: ParticipantListCardProps) => {
       onClick={() => setShowDetail(true)}
       orientation="horizontal"
     >
-      <Card.Section><IdCardImage bdrs="0" alt={name} /></Card.Section>
+      <Card.Section>
+        <IdCardImage bdrs="0" alt={name} src={idCardImageUrls[0]} />
+      </Card.Section>
       <Card.Section p="sm" h="12rem" style={{ overflow: 'auto' }} flex="1">
         {basicInfo}
       </Card.Section>

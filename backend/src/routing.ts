@@ -15,6 +15,11 @@ import meListCharacters from './characters/controllers/meListCharacters.js'
 import meUpdateCharacter from './characters/controllers/meUpdateCharacter.js'
 import publicGetCharacter from './characters/controllers/publicGetCharacter.js'
 import publicListCharacters from './characters/controllers/publicListCharacters.js'
+import adminDeleteImage from './images/controllers/adminDeleteImage.js'
+import adminListImages from './images/controllers/adminListImages.js'
+import meDeleteImage from './images/controllers/meDeleteImage.js'
+import meListImages from './images/controllers/meListImages.js'
+import mePresignImageUpload from './images/controllers/mePresignImageUpload.js'
 import adminAdjustUserRoles from './users/controllers/adminAdjustUserRoles.js'
 import adminApproveUser from './users/controllers/adminApproveUser.js'
 import adminListUsers from './users/controllers/adminListUsers.js'
@@ -44,6 +49,13 @@ const routing: Routing = {
           delete: meDeleteCharacterClaim,
         },
       },
+      images: {
+        '/': meListImages,
+        'presign-upload': mePresignImageUpload,
+        ':imageId': {
+          delete: meDeleteImage,
+        },
+      },
     },
     admin: {
       users: {
@@ -68,6 +80,12 @@ const routing: Routing = {
           patch: adminResolveCharacterClaim,
         },
       },
+      images: {
+        '/': adminListImages,
+        ':imageId': {
+          delete: adminDeleteImage,
+        },
+      },
     },
   },
 }
@@ -89,11 +107,3 @@ export default routing
 // PATCH /api/v1/admin/works/:workId - Update any work details
 // PATCH /api/v1/admin/works/:workId/approval - Approve or reject a work
 // DELETE /api/v1/admin/works/:workId - Delete a work
-
-
-// GET /api/v1/me/images - List all images the user owns with pagination support
-// POST /api/v1/me/images/presign-upload - Upload a new image
-// DELETE /api/v1/me/images/:imageId - Delete an image the user owns
-
-// GET /api/v1/admin/images - List all images (admin) with pagination support
-// DELETE /api/v1/admin/images/:imageId - Delete an image
