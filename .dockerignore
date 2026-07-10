@@ -1,8 +1,20 @@
 .git
-.next
+
+# Real student roster data - must never end up in an image layer.
+data/
+
 node_modules
+**/node_modules
+
 .env
 .env.*
 !.env.example
+
+# Regenerated inside the image - platform-specific, don't copy from host.
+backend/generated/prisma
+
+*.log
+.DS_Store
+
 Dockerfile
 docker-compose.yml

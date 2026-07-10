@@ -10,6 +10,7 @@
     "dev": "tsx src/index.ts",
     "start": "tsx src/index.ts",
     "migrate": "prisma migrate dev",
+    "migrate:deploy": "prisma migrate deploy",
     "generate": "prisma generate"
   },
   "dependencies": {
