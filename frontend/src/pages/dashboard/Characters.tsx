@@ -3,10 +3,10 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { CharacterRole } from '@/api/characters'
-import AdminOnly from '@/components/admin/AdminOnly'
+import AdminOnly from '@/components/dashboard/AdminOnly'
 import { useAdminCharacterList } from '@/hooks/useCharacters'
 
-const AdminCharactersContent = () => {
+const DashboardCharactersContent = () => {
   const navigate = useNavigate()
   const [name, setName] = useState('')
   const [role, setRole] = useState<CharacterRole | null>(null)
@@ -58,7 +58,7 @@ const AdminCharactersContent = () => {
       <Table.Tbody>
         {!loading && data?.characters.map(character => <Table.Tr
           key={character.id}
-          onClick={() => navigate(`/admin/characters/${character.id}`)}
+          onClick={() => navigate(`/dashboard/characters/${character.id}`)}
           style={{ cursor: 'pointer' }}
         >
           <Table.Td>{character.name}</Table.Td>
@@ -82,6 +82,6 @@ const AdminCharactersContent = () => {
   </>
 }
 
-const AdminCharacters = () => <AdminOnly><AdminCharactersContent /></AdminOnly>
+const DashboardCharacters = () => <AdminOnly><DashboardCharactersContent /></AdminOnly>
 
-export default AdminCharacters
+export default DashboardCharacters

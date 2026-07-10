@@ -2,14 +2,14 @@ import { Box, Card } from '@mantine/core'
 import { useState } from 'react'
 
 import { Character } from '@/api/characters'
+import CharacterInfoCard from '@/components/CharacterInfoCard'
 import { IdCardImage } from '@/components/IdCardImage'
-import ParticipantInfoCard from '@/components/ParticipantInfoCard'
 import StaffBasicInfo from '@/components/StaffBasicInfo'
 import StudentBasicInfo from '@/components/StudentBasicInfo'
 
-export type ParticipantListCardProps = Character
+export type CharacterListCardProps = Character
 
-const ParticipantListCard = (props: ParticipantListCardProps) => {
+const CharacterListCard = (props: CharacterListCardProps) => {
   const {
     role,
     name,
@@ -39,8 +39,8 @@ const ParticipantListCard = (props: ParticipantListCardProps) => {
         {basicInfo}
       </Card.Section>
     </Card>
-    {showDetail && <ParticipantInfoCard {...props} setShowDetail={setShowDetail} />}
+    {showDetail && <CharacterInfoCard {...props} setShowDetail={setShowDetail} />}
   </Box>
 }
 
-export default ParticipantListCard
+export default CharacterListCard

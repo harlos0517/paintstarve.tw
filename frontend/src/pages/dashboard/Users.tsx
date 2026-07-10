@@ -5,7 +5,7 @@ import { useState } from 'react'
 
 import { getErrorMessage } from '@/api/backendClient'
 import { UserRole, UserVerifyStatus } from '@/api/users'
-import AdminOnly from '@/components/admin/AdminOnly'
+import AdminOnly from '@/components/dashboard/AdminOnly'
 import { useAdjustUserRole, useAdminUserList, useApproveUser } from '@/hooks/useUsers'
 
 const VERIFY_STATUS_LABEL: Record<UserVerifyStatus, string> = {
@@ -15,7 +15,7 @@ const VERIFY_STATUS_COLOR: Record<UserVerifyStatus, string> = {
   PENDING: 'yellow', VERIFIED: 'green', REJECTED: 'red',
 }
 
-const AdminUsersContent = () => {
+const DashboardUsersContent = () => {
   const [name, setName] = useState('')
   const [role, setRole] = useState<UserRole | null>(null)
   const [verifyStatus, setVerifyStatus] = useState<UserVerifyStatus | null>(null)
@@ -146,6 +146,6 @@ const AdminUsersContent = () => {
   </>
 }
 
-const AdminUsers = () => <AdminOnly><AdminUsersContent /></AdminOnly>
+const DashboardUsers = () => <AdminOnly><DashboardUsersContent /></AdminOnly>
 
-export default AdminUsers
+export default DashboardUsers

@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 
 import { getErrorMessage } from '@/api/backendClient'
 import { ImportCharactersResult } from '@/api/characters'
-import AdminOnly from '@/components/admin/AdminOnly'
+import AdminOnly from '@/components/dashboard/AdminOnly'
 import { useExportCharactersCsv, useImportCharactersCsv } from '@/hooks/useCharacters'
 
 const downloadCsv = (csv: string) => {
@@ -21,7 +21,7 @@ const downloadCsv = (csv: string) => {
   URL.revokeObjectURL(url)
 }
 
-const AdminCharactersImportExportContent = () => {
+const DashboardCharactersImportExportContent = () => {
   const { mutate: doExport, loading: exporting } = useExportCharactersCsv()
   const { mutate: doImport, loading: importing } = useImportCharactersCsv()
 
@@ -54,7 +54,7 @@ const AdminCharactersImportExportContent = () => {
   }
 
   return <Stack>
-    <Anchor component={Link} to="/admin/characters">← 返回角色列表</Anchor>
+    <Anchor component={Link} to="/dashboard/characters">← 返回角色列表</Anchor>
     <Title order={2}>角色資料匯入 / 匯出</Title>
 
     <Stack gap="xs">
@@ -113,8 +113,8 @@ const AdminCharactersImportExportContent = () => {
   </Stack>
 }
 
-const AdminCharactersImportExport = () => (
-  <AdminOnly><AdminCharactersImportExportContent /></AdminOnly>
+const DashboardCharactersImportExport = () => (
+  <AdminOnly><DashboardCharactersImportExportContent /></AdminOnly>
 )
 
-export default AdminCharactersImportExport
+export default DashboardCharactersImportExport

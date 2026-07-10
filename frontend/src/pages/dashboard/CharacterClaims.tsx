@@ -3,7 +3,7 @@ import { useState } from 'react'
 
 import { getErrorMessage } from '@/api/backendClient'
 import { CharacterClaimStatus } from '@/api/characterClaims'
-import AdminOnly from '@/components/admin/AdminOnly'
+import AdminOnly from '@/components/dashboard/AdminOnly'
 import {
   useAdminCharacterClaimList,
   useAdminResolveCharacterClaim,
@@ -16,7 +16,7 @@ const STATUS_COLOR: Record<CharacterClaimStatus, string> = {
   PENDING: 'yellow', APPROVED: 'green', REJECTED: 'red',
 }
 
-const AdminCharacterClaimsContent = () => {
+const DashboardCharacterClaimsContent = () => {
   const [status, setStatus] = useState<CharacterClaimStatus | null>('PENDING')
   const [page, setPage] = useState(1)
   const per = 20
@@ -108,6 +108,6 @@ const AdminCharacterClaimsContent = () => {
   </>
 }
 
-const AdminCharacterClaims = () => <AdminOnly><AdminCharacterClaimsContent /></AdminOnly>
+const DashboardCharacterClaims = () => <AdminOnly><DashboardCharacterClaimsContent /></AdminOnly>
 
-export default AdminCharacterClaims
+export default DashboardCharacterClaims

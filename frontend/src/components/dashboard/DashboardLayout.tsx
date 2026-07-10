@@ -13,7 +13,7 @@ import {
 import { GoogleLogoIcon } from '@phosphor-icons/react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 
-import CharacterClaimPicker from '@/components/admin/CharacterClaimPicker'
+import CharacterClaimPicker from '@/components/dashboard/CharacterClaimPicker'
 import { authClient } from '@/lib/auth-client'
 
 const Login = () => <Container size="xs" pt="xl">
@@ -52,20 +52,20 @@ const NavTabs = ({ isAdmin }: { isAdmin: boolean }) => {
   const { pathname } = useLocation()
 
   const userTabs = [
-    { key: 'me', label: '我的資料', path: '/admin/me' },
-    { key: 'me-characters', label: '我的角色', path: '/admin/me/characters', priority: 2 },
+    { key: 'me', label: '我的資料', path: '/dashboard/me' },
+    { key: 'me-characters', label: '我的角色', path: '/dashboard/me/characters', priority: 2 },
   ]
 
   const adminTabs = [
-    { key: 'characters', label: '角色管理', path: '/admin/characters', priority: 3 },
+    { key: 'characters', label: '角色管理', path: '/dashboard/characters', priority: 3 },
     {
       key: 'characters-import-export',
       label: '角色匯入匯出',
-      path: '/admin/characters/import-export',
+      path: '/dashboard/characters/import-export',
       priority: 1,
     },
-    { key: 'users', label: '使用者管理', path: '/admin/users' },
-    { key: 'character-claims', label: '角色認領申請', path: '/admin/character-claims' },
+    { key: 'users', label: '使用者管理', path: '/dashboard/users' },
+    { key: 'character-claims', label: '角色認領申請', path: '/dashboard/character-claims' },
   ]
 
   const tabs = isAdmin ? [...userTabs, ...adminTabs] : userTabs
@@ -75,7 +75,7 @@ const NavTabs = ({ isAdmin }: { isAdmin: boolean }) => {
   return <Group justify="space-between" mb="md">
     <Tabs
       value={currentKey}
-      onChange={value => navigate(tabs.find(tab => tab.key === value)?.path ?? '/admin/me')}
+      onChange={value => navigate(tabs.find(tab => tab.key === value)?.path ?? '/dashboard/me')}
     >
       <Tabs.List>
         {tabs.map(tab => <Tabs.Tab key={tab.key} value={tab.key}>{tab.label}</Tabs.Tab>)}
@@ -87,7 +87,7 @@ const NavTabs = ({ isAdmin }: { isAdmin: boolean }) => {
   </Group>
 }
 
-const AdminLayout = () => {
+const DashboardLayout = () => {
   const { data: session, isPending } = authClient.useSession()
 
   if (isPending) return <Center h="50vh"><Loader /></Center>
@@ -103,4 +103,4 @@ const AdminLayout = () => {
   </Container>
 }
 
-export default AdminLayout
+export default DashboardLayout

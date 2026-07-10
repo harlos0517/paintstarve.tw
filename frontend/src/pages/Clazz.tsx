@@ -8,7 +8,7 @@ import { NavLink, useParams } from 'react-router-dom'
 
 import { Character } from '@/api/characters'
 import { IdCardImage } from '@/components/IdCardImage'
-import ParticipantInfoCard from '@/components/ParticipantInfoCard'
+import CharacterInfoCard from '@/components/CharacterInfoCard'
 import { usePublicCharacterList } from '@/hooks/useCharacters'
 import { COLS, getClass, ROWS, YEAR_MAP } from '@/lib/classes'
 
@@ -40,7 +40,7 @@ const Seat = ({ student }: SeatProps) => {
         {student?.name || '空位'}
       </Title>
     </Stack>
-    {showDetail && student && <ParticipantInfoCard {...student} setShowDetail={setShowDetail} />}
+    {showDetail && student && <CharacterInfoCard {...student} setShowDetail={setShowDetail} />}
   </>
 }
 

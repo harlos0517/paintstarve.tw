@@ -1,10 +1,10 @@
 import { Alert, LoadingOverlay, Stack, Tabs } from '@mantine/core'
 import { useNavigate, useParams } from 'react-router-dom'
 
-import CharacterEditor from '@/components/admin/CharacterEditor'
+import CharacterEditor from '@/components/dashboard/CharacterEditor'
 import { useMeCharacterList } from '@/hooks/useCharacters'
 
-const AdminMeCharacterEdit = () => {
+const DashboardMeCharacterEdit = () => {
   const navigate = useNavigate()
 
   const {
@@ -26,7 +26,7 @@ const AdminMeCharacterEdit = () => {
     />
     {charactersResult && <Tabs
       value={characterId}
-      onChange={value => navigate(`/admin/me/characters/${value}`)}
+      onChange={value => navigate(`/dashboard/me/characters/${value}`)}
     >
       <Tabs.List>
         {charactersResult.characters.map(
@@ -38,4 +38,4 @@ const AdminMeCharacterEdit = () => {
   </Stack>
 }
 
-export default AdminMeCharacterEdit
+export default DashboardMeCharacterEdit

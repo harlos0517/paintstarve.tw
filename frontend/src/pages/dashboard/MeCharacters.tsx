@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom'
 
 import { useMeCharacterList } from '@/hooks/useCharacters'
 
-const AdminMeCharacters = () => {
+const DashboardMeCharacters = () => {
   const { data, loading, error } = useMeCharacterList()
 
   if (loading) return <Center h="30vh"><Loader /></Center>
@@ -14,7 +14,7 @@ const AdminMeCharacters = () => {
     </Alert>
   }
 
-  return <Navigate to={`/admin/me/characters/${data.characters[0].id}`} replace />
+  return <Navigate to={`/dashboard/me/characters/${data.characters[0].id}`} replace />
 }
 
-export default AdminMeCharacters
+export default DashboardMeCharacters

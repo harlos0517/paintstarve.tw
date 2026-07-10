@@ -1,7 +1,7 @@
 import { Alert, Badge, Button, Group, Stack, Text, TextInput, Title } from '@mantine/core'
 import { useState } from 'react'
 
-import CharacterClaimPicker from '@/components/admin/CharacterClaimPicker'
+import CharacterClaimPicker from '@/components/dashboard/CharacterClaimPicker'
 import { authClient } from '@/lib/auth-client'
 
 const ROLE_LABEL: Record<string, string> = { USER: '使用者', ADMIN: '管理員' }
@@ -12,7 +12,7 @@ const VERIFY_STATUS_COLOR: Record<string, string> = {
   PENDING: 'yellow', VERIFIED: 'green', REJECTED: 'red',
 }
 
-const AdminMe = () => {
+const DashboardMe = () => {
   const { data: session, refetch } = authClient.useSession()
   const user = session!.user
 
@@ -64,4 +64,4 @@ const AdminMe = () => {
   </Stack>
 }
 
-export default AdminMe
+export default DashboardMe

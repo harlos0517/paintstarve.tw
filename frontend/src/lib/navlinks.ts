@@ -6,7 +6,7 @@ export type Route = {
 }
 
 export const navlinks: Route[] = [
-  { key: 'students', name: '師生', path: '/students' },
+  { key: 'characters', name: '師生', path: '/characters' },
   { key: 'classes', name: '班級', path: '/classes' },
-  { key: 'admin', name: '後臺', path: '/admin' },
+  { key: 'dashboard', name: '後臺', path: '/dashboard' },
 ]

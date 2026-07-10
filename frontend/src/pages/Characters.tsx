@@ -19,10 +19,10 @@ import { useDisclosure } from '@mantine/hooks'
 import { useState } from 'react'
 
 import { CharacterRole } from '@/api/characters'
-import ParticipantListCard from '@/components/ParticipantListCard'
+import CharacterListCard from '@/components/CharacterListCard'
 import { usePublicCharacterList } from '@/hooks/useCharacters'
 
-const Students = () => {
+const Characters = () => {
   const [filterExpanded, { toggle: toggleFilter }] = useDisclosure(false)
 
   const [name, setName] = useState('')
@@ -50,7 +50,7 @@ const Students = () => {
   return <Container p="md" size="1440px">
     <Stack>
       <Group justify="space-between" w="100%" mb={5} >
-        <Title order={2}>學生檔案</Title>
+        <Title order={2}>師生檔案</Title>
         <Button onClick={toggleFilter}>篩選</Button>
       </Group>
       <Collapse expanded={filterExpanded}>
@@ -101,7 +101,7 @@ const Students = () => {
         </Group>
       </Collapse>
 
-      {Boolean(error) && <Alert color="red">無法載入學生資料。</Alert>}
+      {Boolean(error) && <Alert color="red">無法載入師生資料。</Alert>}
 
       <Group align="end" justify="space-between" w="100%">
         <Pagination value={page} onChange={setPage} total={totalPages} />
@@ -123,8 +123,8 @@ const Students = () => {
       {loading
         ? <Center h="30vh"><Loader /></Center>
         : <SimpleGrid cols={{ xs: 1, sm: 2, lg: 3 }} spacing="md">
-          {data?.characters.map(student => (
-            <ParticipantListCard key={student.seatId} {...student} />
+          {data?.characters.map(character => (
+            <CharacterListCard key={character.seatId} {...character} />
           ))}
         </SimpleGrid>}
 
@@ -133,4 +133,4 @@ const Students = () => {
   </Container>
 }
 
-export default Students
+export default Characters

@@ -25,7 +25,7 @@ import {
   CharacterDetail,
   CharacterRole, MeCharacterUpdateInput,
 } from '@/api/characters'
-import UserPicker from '@/components/admin/UserPicker'
+import UserPicker from '@/components/dashboard/UserPicker'
 import {
   useAdminCharacter,
   useMeCharacter,

@@ -5,11 +5,11 @@ import { IdCardImage } from '@/components/IdCardImage'
 import StaffBasicInfo from '@/components/StaffBasicInfo'
 import StudentBasicInfo from '@/components/StudentBasicInfo'
 
-export interface ParticipantInfoCardProps extends Character {
+export interface CharacterInfoCardProps extends Character {
   setShowDetail: (show: boolean) => void
 }
 
-const ParticipantInfoCard = (props: ParticipantInfoCardProps) => {
+const CharacterInfoCard = (props: CharacterInfoCardProps) => {
   const {
     role,
     name,
@@ -68,4 +68,4 @@ const ParticipantInfoCard = (props: ParticipantInfoCardProps) => {
   </Affix>
 }
 
-export default ParticipantInfoCard
+export default CharacterInfoCard

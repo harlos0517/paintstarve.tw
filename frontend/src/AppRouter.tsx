@@ -6,39 +6,39 @@ import {
   RouterProvider,
 } from 'react-router-dom'
 
-import AdminLayout from '@/components/admin/AdminLayout'
 import Layout from '@/components/Layout'
-import AdminCharacterEdit from '@/pages/admin/CharacterEdit'
-import AdminCharacters from '@/pages/admin/Characters'
-import AdminCharacterClaims from '@/pages/admin/CharacterClaims'
-import AdminCharactersImportExport from '@/pages/admin/CharactersImportExport'
-import AdminMe from '@/pages/admin/Me'
-import AdminMeCharacterEdit from '@/pages/admin/MeCharacterEdit'
-import AdminMeCharacters from '@/pages/admin/MeCharacters'
-import AdminUsers from '@/pages/admin/Users'
+import DashboardLayout from '@/components/dashboard/DashboardLayout'
+import DashboardCharacterClaims from '@/pages/dashboard/CharacterClaims'
+import DashboardCharacterEdit from '@/pages/dashboard/CharacterEdit'
+import DashboardCharacters from '@/pages/dashboard/Characters'
+import DashboardCharactersImportExport from '@/pages/dashboard/CharactersImportExport'
+import DashboardMe from '@/pages/dashboard/Me'
+import DashboardMeCharacterEdit from '@/pages/dashboard/MeCharacterEdit'
+import DashboardMeCharacters from '@/pages/dashboard/MeCharacters'
+import DashboardUsers from '@/pages/dashboard/Users'
+import Characters from '@/pages/Characters'
 import Classes from '@/pages/Classes'
 import Clazz from '@/pages/Clazz'
-import Students from '@/pages/Students'
 
 const router = () => createHashRouter(
   createRoutesFromElements(
     <>
       <Route path="/" element={<Layout />}>
-        <Route path="/" element={<Navigate to="/students" replace />} />
-        <Route path="/students" element={<Students />} />
+        <Route path="/" element={<Navigate to="/characters" replace />} />
+        <Route path="/characters" element={<Characters />} />
         <Route path="/classes" element={<Classes />} />
         <Route path="/class/:clazz" element={<Clazz />} />
       </Route>
-      <Route path="admin" element={<AdminLayout />}>
-        <Route path="" element={<Navigate to="/admin/me" replace />} />
-        <Route path="me" element={<AdminMe />} />
-        <Route path="me/characters" element={<AdminMeCharacters />} />
-        <Route path="me/characters/:characterId" element={<AdminMeCharacterEdit />} />
-        <Route path="characters" element={<AdminCharacters />} />
-        <Route path="characters/import-export" element={<AdminCharactersImportExport />} />
-        <Route path="characters/:characterId" element={<AdminCharacterEdit />} />
-        <Route path="users" element={<AdminUsers />} />
-        <Route path="character-claims" element={<AdminCharacterClaims />} />
+      <Route path="dashboard" element={<DashboardLayout />}>
+        <Route path="" element={<Navigate to="/dashboard/me" replace />} />
+        <Route path="me" element={<DashboardMe />} />
+        <Route path="me/characters" element={<DashboardMeCharacters />} />
+        <Route path="me/characters/:characterId" element={<DashboardMeCharacterEdit />} />
+        <Route path="characters" element={<DashboardCharacters />} />
+        <Route path="characters/import-export" element={<DashboardCharactersImportExport />} />
+        <Route path="characters/:characterId" element={<DashboardCharacterEdit />} />
+        <Route path="users" element={<DashboardUsers />} />
+        <Route path="character-claims" element={<DashboardCharacterClaims />} />
       </Route>
     </>,
   ),
