@@ -53,6 +53,28 @@ export const characterOutput = z.object({
   twitter: z.string().nullable(),
 })
 
+// Used for single-character detail endpoints that need to display/reassign
+// the linked account. Left out of the public output/select - the account's
+// name and email aren't meant to be publicly exposed.
+export const characterDetailSelect = {
+  ...characterSelect,
+  user: {
+    select: {
+      id: true,
+      name: true,
+      email: true,
+    },
+  },
+} as const
+
+export const characterDetailOutput = characterOutput.extend({
+  user: z.object({
+    id: z.string(),
+    name: z.string(),
+    email: z.string(),
+  }).nullable(),
+})
+
 export const characterListSelect = {
   id: true,
   season: true,

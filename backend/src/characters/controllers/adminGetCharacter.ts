@@ -4,7 +4,7 @@ import { z } from 'zod'
 
 import { Character } from '../../db'
 import { adminAuthMiddleware } from '../../middlewares/auth'
-import { characterOutput, characterSelect } from '../services/characterOutput'
+import { characterDetailOutput, characterDetailSelect } from '../services/characterOutput'
 
 const adminGetCharacter = defaultEndpointsFactory
   .addMiddleware(adminAuthMiddleware)
@@ -13,12 +13,12 @@ const adminGetCharacter = defaultEndpointsFactory
       characterId: z.string(),
     }),
     output: z.object({
-      character: characterOutput,
+      character: characterDetailOutput,
     }),
     handler: async({ input }) => {
       const character = await Character.findUnique({
         where: { id: input.characterId },
-        select: characterSelect,
+        select: characterDetailSelect,
       })
 
       if (!character) throw createHttpError(404)

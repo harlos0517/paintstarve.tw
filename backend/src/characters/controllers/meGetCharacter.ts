@@ -4,7 +4,7 @@ import { z } from 'zod'
 
 import { Character } from '../../db'
 import { userAuthMiddleware } from '../../middlewares/auth'
-import { characterOutput, characterSelect } from '../services/characterOutput'
+import { characterDetailOutput, characterDetailSelect } from '../services/characterOutput'
 
 const meGetCharacter = defaultEndpointsFactory
   .addMiddleware(userAuthMiddleware)
@@ -13,12 +13,12 @@ const meGetCharacter = defaultEndpointsFactory
       characterId: z.string(),
     }),
     output: z.object({
-      character: characterOutput,
+      character: characterDetailOutput,
     }),
     handler: async({ input, ctx }) => {
       const character = await Character.findFirst({
         where: { id: input.characterId, userId: ctx.user.id },
-        select: characterSelect,
+        select: characterDetailSelect,
       })
 
       if (!character) throw createHttpError(404)

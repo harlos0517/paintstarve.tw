@@ -52,6 +52,18 @@ export interface CharacterListResult<T> {
   total: number
 }
 
+export interface CharacterOwner {
+  id: string
+  name: string
+  email: string
+}
+
+// The me/admin single-character endpoints also embed the linked account
+// (not exposed publicly, so this is distinct from the plain Character type).
+export interface CharacterDetail extends Character {
+  user: CharacterOwner | null
+}
+
 // Fields a character owner ("me") is allowed to edit about their own character.
 export interface MeCharacterUpdateInput {
   nameEn?: string | null
@@ -87,7 +99,7 @@ export const listMeCharacters = async(filters: CharacterListFilters = {}) => {
 }
 
 export const getMeCharacter = async(characterId: string) => {
-  const { data } = await backendClient.get<{ character: Character }>(
+  const { data } = await backendClient.get<{ character: CharacterDetail }>(
     `/api/v1/me/characters/${characterId}`,
   )
   return data.character
@@ -108,7 +120,7 @@ export const listAdminCharacters = async(filters: CharacterListFilters = {}) => 
 }
 
 export const getAdminCharacter = async(characterId: string) => {
-  const { data } = await backendClient.get<{ character: Character }>(
+  const { data } = await backendClient.get<{ character: CharacterDetail }>(
     `/api/v1/admin/characters/${characterId}`,
   )
   return data.character
