@@ -70,9 +70,8 @@ const DashboardCharactersImportExportContent = () => {
       <Text fw={700}>匯入</Text>
       <Text size="sm" c="dimmed">
         上傳 CSV 檔案以批次新增或更新角色。有 id 欄位且對應到現有角色的資料列會更新該角色，
-        其餘則會新增為新角色（未指定所屬使用者時，會歸屬到執行匯入的帳號）。
-        不存在於資料表的欄位會被忽略；個別資料列若有問題，只會列在下方錯誤清單中，
-        不影響其餘資料列的匯入。
+        其餘則會新增為新角色。不存在於資料表的欄位會被忽略；
+        個別資料列若有問題，只會列在下方錯誤清單中，不影響其餘資料列的匯入。
       </Text>
       <FileInput
         label="CSV 檔案" placeholder="選擇檔案" accept=".csv,text/csv"

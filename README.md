@@ -52,10 +52,15 @@
 
 ### 圖片（Image）
 
-- `Image` 是通用的圖片資料表，透過 `uploadedByUserId`（誰上傳的）與可選的 `idCardForCharacterId`（若為某角色的證件照）關聯
-- 上傳流程為 presigned URL：前端呼叫 `POST /me/images/presign-upload` 取得一組 R2 簽名 PUT URL，直接把檔案傳到 R2（後端完全不經手檔案內容），成功後前端再用回傳的 `publicUrl` 顯示
+- `Image` 是通用的圖片資料表，透過 `uploadedByUserId`（誰上傳的，nullable）與可選的 `idCardForCharacterId`（若為某角色的證件照）關聯
+- **`uploadedByUserId` 為 nullable，`null` 代表「沒有真實上傳者」（例如舊試算表匯入、角色尚未被認領時的證件照），不可預設成執行匯入的管理員**——這與 `Character.userId` 是同一個教訓，曾經真的犯過同樣的錯誤又修過一次（CSV 匯入時把所有未認領角色的證件照都歸給了匯入的管理員本人，導致該帳號的圖片數量爆量、觸發上傳上限），細節見下方「給未來實作的重要提醒」
+- 角色被認領（`resolveClaim`）時，其證件照的 `uploadedByUserId` 會自動改為認領者；CSV 匯入／重新匯入時則會依角色「當下的擁有者」設定（未認領為 `null`），而不是匯入者本人
+- 上傳流程為 presigned URL：前端呼叫 `POST /me/images/presign-upload`（或角色專屬的 `POST /me/characters/:id/id-card-images/presign-upload`）取得一組 R2 簽名 PUT URL，直接把檔案傳到 R2（後端完全不經手檔案內容），成功後前端再用回傳的 `publicUrl` 顯示
+- 上傳限制：單檔 10MB（僅前端檢查，未在 R2 層強制）、每個角色最多 5 張證件照、每個使用者總圖片數上限 100 張（後兩者在 `images/services/imageLimits.ts` 後端強制）
+- 角色的證件照支援單張／輪播兩種公開顯示模式（`Character.idCardDisplayMode` + `primaryIdCardImageId`），擁有者可在角色編輯頁的「管理證件照」彈窗（`IdCardImageManager`）調整；`ImagePreview`／`ConfirmDeleteButton`／`ConfirmModal` 為共用元件，分別處理「點圖放大」與「刪除前二次確認」
 - R2 桶為公開讀取（`R2_PUBLIC_URL`），圖片內容本身（含證件照）視為虛構角色的創作素材，非真實個資，因此在公開 API（`public/characters`）也會回傳 `idCardImageUrls`；但角色關聯的「真實使用者帳號」（`user: {name, email}`）僅在 `me`/`admin` 的角色詳細資料端點回傳，不對外公開
 - 刪除圖片會同時刪除資料庫紀錄與 R2 物件；若該圖片網址曾被 CDN 快取，刪除後短時間內舊網址仍可能命中快取（目前接受此為 eventual consistency，未做主動 cache purge）
+- `R2_KEY_PREFIX`（可選）讓不同環境共用同一個 bucket 而不互相覆蓋（例如 dev 用 `dev/`，prod 留空）；僅套用在「新上傳」的 key 上，CSV 匯入的 `fileId` 對應到既有舊檔案的路徑固定不可加前綴
 
 ### 前台 vs. 後臺（Dashboard）
 
@@ -151,7 +156,7 @@ pnpm --filter frontend <script>
 
 ## 給未來實作的重要提醒
 
-- **`Character.userId` 是 nullable**，`null` 才是「尚未認領」的正確狀態，不要用「某個預設使用者」當佔位符（曾經這樣做過，後來特地改掉）
+- **這個專案裡「某個東西還沒有真正的擁有者」一律用 `null`，絕對不要預設成當下操作的管理員帳號**——這個坑踩過兩次了：第一次是 `Character.userId`（CSV 匯入的未認領角色），第二次是 `Image.uploadedByUserId`（CSV 匯入的證件照，第一次修 `Character.userId` 時沒有連帶檢查這裡，導致管理員帳號累積了 868 張其實不屬於自己的圖片，還因此觸發了圖片數量上限）。之後任何「批次建立、暫時沒有明確擁有者」的資料，欄位都應該設計成 nullable，並在寫入時明確判斷「這筆資料現在真正屬於誰」，而不是圖方便塞當下的 `ctx.user.id`
 - **CSV 匯入的比對鍵是 `(season, seatId)` 而非 `id`**——如果要新增其他批次匯入/同步功能，記得沿用這個比對邏輯，不要只靠 `id`
 - **新增任何批次處理（CSV、批次 API）時，每一筆都要各自 try/catch**，不要讓單一筆的錯誤中斷整批處理
 - **改動 `Character` 或其他已有資料的欄位限制前，先確認現有資料是否已違反新限制**（例如加 `@@unique` 前，先查有沒有重複資料）
@@ -179,3 +184,11 @@ pnpm --filter frontend <script>
   - 更新紀錄
   - 製作人員
   - 免責聲明
+
+## 備註
+- 推上 ghcr.io
+```bash
+echo "$GITHUB_PAT" | docker login ghcr.io -u harlos0517 --password-stdin # login
+docker build -f backend/Dockerfile -t ghcr.io/harlos0517/paintstarve-backend:latest .
+docker push ghcr.io/harlos0517/paintstarve-backend:latest
+```

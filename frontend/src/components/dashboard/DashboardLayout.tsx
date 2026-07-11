@@ -54,6 +54,7 @@ const NavTabs = ({ isAdmin }: { isAdmin: boolean }) => {
   const userTabs = [
     { key: 'me', label: '我的資料', path: '/dashboard/me' },
     { key: 'me-characters', label: '我的角色', path: '/dashboard/me/characters', priority: 2 },
+    { key: 'me-images', label: '我的圖片', path: '/dashboard/me/images', priority: 2.5 },
   ]
 
   const adminTabs = [

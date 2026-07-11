@@ -44,11 +44,11 @@ export const imageDetailOutput = imageOutput.extend({
     id: z.string(),
     name: z.string(),
     email: z.string(),
-  }),
+  }).nullable(),
 })
 
 export const toImageDetailOutput = (image: ImageRow & {
-  uploadedByUser: { id: string, name: string, email: string }
+  uploadedByUser: { id: string, name: string, email: string } | null
 }) => ({
   ...toImageOutput(image),
   uploadedByUser: image.uploadedByUser,

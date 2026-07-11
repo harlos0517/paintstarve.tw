@@ -1,0 +1,14 @@
+.control
+  background-color: transparent!important
+  border: none!important
+  svg
+    color: white
+
+.controls, .indicators
+  transition: opacity 150ms ease
+  opacity: 0
+
+.root
+  &:hover
+    .controls, .indicators
+      opacity: 1

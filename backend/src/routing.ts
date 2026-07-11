@@ -12,7 +12,10 @@ import adminListCharacters from './characters/controllers/adminListCharacters.js
 import adminUpdateCharacter from './characters/controllers/adminUpdateCharacter.js'
 import meGetCharacter from './characters/controllers/meGetCharacter.js'
 import meListCharacters from './characters/controllers/meListCharacters.js'
+import mePresignIdCardImageUpload from './characters/controllers/mePresignIdCardImageUpload.js'
 import meUpdateCharacter from './characters/controllers/meUpdateCharacter.js'
+import meUpdateCharacterIdCardDisplay
+  from './characters/controllers/meUpdateCharacterIdCardDisplay.js'
 import publicGetCharacter from './characters/controllers/publicGetCharacter.js'
 import publicListCharacters from './characters/controllers/publicListCharacters.js'
 import adminDeleteImage from './images/controllers/adminDeleteImage.js'
@@ -36,8 +39,14 @@ const routing: Routing = {
       characters: {
         '/': meListCharacters,
         ':characterId': {
-          get: meGetCharacter,
-          patch: meUpdateCharacter,
+          '/': {
+            get: meGetCharacter,
+            patch: meUpdateCharacter,
+          },
+          'id-card-images': {
+            'presign-upload': mePresignIdCardImageUpload,
+          },
+          'id-card-display': meUpdateCharacterIdCardDisplay,
         },
       },
       'character-claims': {

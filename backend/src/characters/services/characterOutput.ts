@@ -27,8 +27,10 @@ export const characterSelect = {
   description: true,
   verified: true,
   twitter: true,
+  idCardDisplayMode: true,
+  primaryIdCardImageId: true,
   idCardImages: {
-    select: { storageKey: true },
+    select: { id: true, storageKey: true, createdAt: true },
   },
 } as const
 
@@ -55,13 +57,16 @@ export const characterOutput = z.object({
   description: z.string().nullable(),
   verified: z.boolean(),
   twitter: z.string().nullable(),
+  idCardDisplayMode: z.enum(['SINGLE', 'CAROUSEL']),
   idCardImageUrls: z.array(z.string()),
 })
 
 // All character data (including ID card images) is fictional role-play
 // content and meant to be public. The linked account is the one exception -
 // that's a real person's real name/email, so it's kept out of the public
-// select/output and only added for the me/admin detail endpoints.
+// select/output and only added for the me/admin detail endpoints, which also
+// need real Image ids (not just URLs) and the current primary pointer so an
+// owner's management UI has something to act on.
 export const characterDetailSelect = {
   ...characterSelect,
   user: {
@@ -79,15 +84,56 @@ export const characterDetailOutput = characterOutput.extend({
     name: z.string(),
     email: z.string(),
   }).nullable(),
+  primaryIdCardImageId: z.string().nullable(),
+  idCardImages: z.array(z.object({
+    id: z.string(),
+    url: z.string(),
+    createdAt: ez.dateOut(),
+  })),
 })
 
-export const toCharacterOutput = <T extends { idCardImages: { storageKey: string }[] }>(
-  character: T,
-) => {
+type IdCardImageRow = { id: string, storageKey: string, createdAt: Date }
+
+// Puts the primary image (if set) first, otherwise leaves DB order as-is.
+const sortIdCardImages = <T extends { id: string }>(
+  images: T[], primaryIdCardImageId: string | null,
+): T[] => {
+  const primaryIndex = primaryIdCardImageId
+    ? images.findIndex(image => image.id === primaryIdCardImageId)
+    : -1
+  if (primaryIndex <= 0) return images
+
+  const reordered = [...images]
+  const [primary] = reordered.splice(primaryIndex, 1)
+  reordered.unshift(primary)
+  return reordered
+}
+
+export const toCharacterOutput = <T extends {
+  idCardImages: IdCardImageRow[]
+  primaryIdCardImageId: string | null
+}>(character: T) => {
   const { idCardImages, ...rest } = character
+  const ordered = sortIdCardImages(idCardImages, character.primaryIdCardImageId)
   return {
     ...rest,
-    idCardImageUrls: idCardImages.map(image => buildImagePublicUrl(image.storageKey)),
+    idCardImageUrls: ordered.map(image => buildImagePublicUrl(image.storageKey)),
+  }
+}
+
+export const toCharacterDetailOutput = <T extends {
+  idCardImages: IdCardImageRow[]
+  primaryIdCardImageId: string | null
+}>(character: T) => {
+  const ordered = sortIdCardImages(character.idCardImages, character.primaryIdCardImageId)
+  return {
+    ...toCharacterOutput(character),
+    primaryIdCardImageId: character.primaryIdCardImageId,
+    idCardImages: ordered.map(image => ({
+      id: image.id,
+      url: buildImagePublicUrl(image.storageKey),
+      createdAt: image.createdAt,
+    })),
   }
 }
 

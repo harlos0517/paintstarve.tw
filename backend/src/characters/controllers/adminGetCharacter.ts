@@ -7,7 +7,7 @@ import { adminAuthMiddleware } from '../../middlewares/auth'
 import {
   characterDetailOutput,
   characterDetailSelect,
-  toCharacterOutput,
+  toCharacterDetailOutput,
 } from '../services/characterOutput'
 
 const adminGetCharacter = defaultEndpointsFactory
@@ -27,7 +27,7 @@ const adminGetCharacter = defaultEndpointsFactory
 
       if (!character) throw createHttpError(404)
 
-      return { character: toCharacterOutput(character) }
+      return { character: toCharacterDetailOutput(character) }
     },
   })
 

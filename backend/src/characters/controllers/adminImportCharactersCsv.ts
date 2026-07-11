@@ -14,8 +14,13 @@ import {
 // Handled separately from csvImportColumns/csvRowInput since it doesn't map
 // onto the Character table at all. Upserting on storageKey (which is unique)
 // keeps re-imports idempotent instead of erroring on a duplicate key.
+//
+// uploadedByUserId tracks the character's *current owner* (null if
+// unclaimed) - not the admin running the import. Otherwise every legacy scan
+// would be permanently attributed to whoever happened to import the CSV,
+// the same mistake already fixed once for Character.userId.
 const linkIdCardImage = async(
-  characterId: string, fileId: string | undefined, uploadedByUserId: string,
+  characterId: string, fileId: string | undefined, uploadedByUserId: string | null,
 ) => {
   if (!fileId) return
 
@@ -23,7 +28,7 @@ const linkIdCardImage = async(
   await Image.upsert({
     where: { storageKey },
     create: { storageKey, uploadedByUserId, idCardForCharacterId: characterId },
-    update: { idCardForCharacterId: characterId },
+    update: { idCardForCharacterId: characterId, uploadedByUserId },
   })
 }
 
@@ -42,7 +47,7 @@ const adminImportCharactersCsv = defaultEndpointsFactory
         message: z.string(),
       })),
     }),
-    handler: async({ input, ctx }) => {
+    handler: async({ input }) => {
       let records: Record<string, string>[]
       try {
         records = parse(input.file.data, {
@@ -88,7 +93,7 @@ const adminImportCharactersCsv = defaultEndpointsFactory
                 ...(userId ? { userId } : {}),
               },
             })
-            await linkIdCardImage(existing.id, rawRow.fileId?.trim(), ctx.user.id)
+            await linkIdCardImage(existing.id, rawRow.fileId?.trim(), userId ?? existing.userId)
             updated += 1
             continue
           }
@@ -114,7 +119,7 @@ const adminImportCharactersCsv = defaultEndpointsFactory
               userId,
             },
           })
-          await linkIdCardImage(character.id, rawRow.fileId?.trim(), ctx.user.id)
+          await linkIdCardImage(character.id, rawRow.fileId?.trim(), character.userId)
           created += 1
         } catch(err) {
           errors.push({ row, message: err instanceof Error ? err.message : String(err) })

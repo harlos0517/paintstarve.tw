@@ -35,6 +35,11 @@ enum CharacterClaimStatus {
   REJECTED
 }
 
+enum CharacterIdCardDisplayMode {
+  SINGLE
+  CAROUSEL
+}
+
 model User {
   id        String   @id @default(cuid())
   createdAt DateTime @default(now())
@@ -139,10 +144,14 @@ model Character {
   verified    Boolean       @default(false)
   twitter     String?
 
-  user         User?                   @relation(fields: [userId], references: [id])
-  idCardImages Image[]                 @relation("CharacterIdCardImages")
-  works        WorkCharacter[]
-  claims       CharacterClaimRequest[]
+  idCardDisplayMode    CharacterIdCardDisplayMode @default(SINGLE)
+  primaryIdCardImageId String?
+
+  user               User?                   @relation(fields: [userId], references: [id])
+  idCardImages       Image[]                 @relation("CharacterIdCardImages")
+  primaryIdCardImage Image?                  @relation("CharacterPrimaryIdCardImage", fields: [primaryIdCardImageId], references: [id])
+  works              WorkCharacter[]
+  claims             CharacterClaimRequest[]
 
   @@unique([season, seatId])
 }
@@ -168,12 +177,13 @@ model Image {
   updatedAt DateTime @updatedAt
 
   storageKey           String  @unique
-  uploadedByUserId     String
+  uploadedByUserId     String?
   idCardForCharacterId String?
 
-  uploadedByUser     User        @relation("UserUploadedImages", fields: [uploadedByUserId], references: [id])
-  idCardForCharacter Character?  @relation("CharacterIdCardImages", fields: [idCardForCharacterId], references: [id])
-  works              WorkImage[]
+  uploadedByUser       User?       @relation("UserUploadedImages", fields: [uploadedByUserId], references: [id])
+  idCardForCharacter   Character?  @relation("CharacterIdCardImages", fields: [idCardForCharacterId], references: [id])
+  primaryForCharacters Character[] @relation("CharacterPrimaryIdCardImage")
+  works                WorkImage[]
 }
 
 model Work {

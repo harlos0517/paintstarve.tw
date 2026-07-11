@@ -1,7 +1,7 @@
 import { Affix, Box, Card, Center, Divider, Group, Stack, Text } from '@mantine/core'
 
 import { Character } from '@/api/characters'
-import { IdCardImage } from '@/components/IdCardImage'
+import { CharacterIdCardDisplay } from '@/components/CharacterIdCardDisplay'
 import StaffBasicInfo from '@/components/StaffBasicInfo'
 import StudentBasicInfo from '@/components/StudentBasicInfo'
 
@@ -15,6 +15,7 @@ const CharacterInfoCard = (props: CharacterInfoCardProps) => {
     name,
     description,
     idCardImageUrls,
+    idCardDisplayMode,
     setShowDetail,
   } = props
 
@@ -46,7 +47,13 @@ const CharacterInfoCard = (props: CharacterInfoCardProps) => {
         <Card.Section>
           <Stack>
             <Group wrap="nowrap">
-              <IdCardImage bdrs="md" alt={name} src={idCardImageUrls[0]} />
+              <CharacterIdCardDisplay
+                mode="controlled"
+                alt={name}
+                idCardImageUrls={idCardImageUrls}
+                idCardDisplayMode={idCardDisplayMode}
+                bdrs="md"
+              />
               <Box mih="12rem">{basicInfo}</Box>
             </Group>
             {description && <>

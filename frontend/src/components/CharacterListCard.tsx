@@ -2,8 +2,8 @@ import { Box, Card } from '@mantine/core'
 import { useState } from 'react'
 
 import { Character } from '@/api/characters'
+import CharacterIdCardDisplay from '@/components/CharacterIdCardDisplay'
 import CharacterInfoCard from '@/components/CharacterInfoCard'
-import { IdCardImage } from '@/components/IdCardImage'
 import StaffBasicInfo from '@/components/StaffBasicInfo'
 import StudentBasicInfo from '@/components/StudentBasicInfo'
 
@@ -13,6 +13,7 @@ const CharacterListCard = (props: CharacterListCardProps) => {
   const {
     role,
     name,
+    idCardDisplayMode,
     idCardImageUrls,
   } = props
 
@@ -33,7 +34,12 @@ const CharacterListCard = (props: CharacterListCardProps) => {
       orientation="horizontal"
     >
       <Card.Section>
-        <IdCardImage bdrs="0" alt={name} src={idCardImageUrls[0]} />
+        <CharacterIdCardDisplay
+          idCardImageUrls={idCardImageUrls}
+          idCardDisplayMode={idCardDisplayMode}
+          alt={name}
+          bdrs={0}
+        />
       </Card.Section>
       <Card.Section p="sm" h="12rem" style={{ overflow: 'auto' }} flex="1">
         {basicInfo}

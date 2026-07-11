@@ -15,6 +15,7 @@ import DashboardCharactersImportExport from '@/pages/dashboard/CharactersImportE
 import DashboardMe from '@/pages/dashboard/Me'
 import DashboardMeCharacterEdit from '@/pages/dashboard/MeCharacterEdit'
 import DashboardMeCharacters from '@/pages/dashboard/MeCharacters'
+import DashboardMeImages from '@/pages/dashboard/MeImages'
 import DashboardUsers from '@/pages/dashboard/Users'
 import Characters from '@/pages/Characters'
 import Classes from '@/pages/Classes'
@@ -34,6 +35,7 @@ const router = () => createHashRouter(
         <Route path="me" element={<DashboardMe />} />
         <Route path="me/characters" element={<DashboardMeCharacters />} />
         <Route path="me/characters/:characterId" element={<DashboardMeCharacterEdit />} />
+        <Route path="me/images" element={<DashboardMeImages />} />
         <Route path="characters" element={<DashboardCharacters />} />
         <Route path="characters/import-export" element={<DashboardCharactersImportExport />} />
         <Route path="characters/:characterId" element={<DashboardCharacterEdit />} />

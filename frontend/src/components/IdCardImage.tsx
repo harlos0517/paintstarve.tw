@@ -6,11 +6,11 @@ export interface IdCardImageProps {
   src?: string
   alt?: string
   size?: number
-  bdrs: number | string
+  bdrs?: number | string
 }
 
 export const IdCardImage = (props: IdCardImageProps) => {
-  const { src = BlankIdCardImage, alt, bdrs, size = 12 } = props
+  const { src = BlankIdCardImage, alt, bdrs = 'md', size = 12 } = props
 
   const headBoxRatio = 666 / 545
   const scale = 1.55

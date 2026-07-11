@@ -25,6 +25,7 @@ export interface Character {
   description: string | null
   verified: boolean
   twitter: string | null
+  idCardDisplayMode: 'SINGLE' | 'CAROUSEL'
   idCardImageUrls: string[]
 }
 
@@ -59,8 +60,16 @@ export interface CharacterOwner {
   email: string
 }
 
+export interface CharacterIdCardImage {
+  id: string
+  url: string
+  createdAt: string
+}
+
 export interface CharacterDetail extends Character {
   user: CharacterOwner | null
+  primaryIdCardImageId: string | null
+  idCardImages: CharacterIdCardImage[]
 }
 
 // Fields a character owner ("me") is allowed to edit about their own character.

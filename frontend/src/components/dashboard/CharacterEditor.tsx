@@ -1,7 +1,6 @@
 import {
   ActionIcon,
   Alert,
-  Anchor,
   Box,
   Button,
   Checkbox,
@@ -25,6 +24,7 @@ import {
   CharacterDetail,
   CharacterRole, MeCharacterUpdateInput,
 } from '@/api/characters'
+import IdCardImageManager from '@/components/dashboard/IdCardImageManager'
 import UserPicker from '@/components/dashboard/UserPicker'
 import {
   useAdminCharacter,
@@ -32,6 +32,7 @@ import {
   useUpdateAdminCharacter,
   useUpdateMeCharacter,
 } from '@/hooks/useCharacters'
+import { Carousel } from '@mantine/carousel'
 import { CheckIcon, CopyIcon } from '@phosphor-icons/react'
 
 interface CharacterFormProps {
@@ -208,15 +209,33 @@ const CharacterForm = ({ character, mode, refetch }: CharacterFormProps) => {
           />
         </Grid.Col>
       </Grid>
-      {character.idCardImageUrls.length > 0 && <Box>
-        <Text fw={700}>證件照</Text>
-        <Group>
-          {character.idCardImageUrls.map(url => (
-            <Anchor key={url} href={url} target="_blank" rel="noopener noreferrer">
-              <Image src={url} h="16.5rem" w="auto" fit="contain" radius="sm" />
-            </Anchor>
-          ))}
+      {(character.idCardImageUrls.length > 0 || !isAdmin) && <Box>
+        <Group justify="space-between" mb={4}>
+          <Text fw={700}>證件照</Text>
+          {!isAdmin && <IdCardImageManager character={character} refetch={refetch} />}
         </Group>
+        {character.idCardImageUrls.length > 1
+          ? <Carousel
+            controlsOffset={0}
+            withControls
+            withIndicators
+            slideSize="00%"
+            emblaOptions={{ loop: true }}
+            bdrs="md"
+            style={{ overflow: 'hidden' }}
+            w={`calc(16rem * ${827 / 1181})`}
+          >
+            {character.idCardImageUrls.map(url => (
+              <Carousel.Slide key={url}>
+                <Image src={url} h="16rem" w="auto" fit="contain" radius="sm" />
+              </Carousel.Slide>
+            ))}
+          </Carousel>
+          : <Image
+            src={character.idCardImageUrls[0]}
+            h="16rem" w="auto" fit="contain" radius="sm"
+          />
+        }
       </Box>}
     </Group>
 
