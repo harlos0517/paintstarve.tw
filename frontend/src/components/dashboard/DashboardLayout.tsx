@@ -72,16 +72,22 @@ const NavTabs = ({ isAdmin }: { isAdmin: boolean }) => {
   ]
 
   const tabs = isAdmin ? [...userTabs, ...adminTabs] : userTabs
+
   const tabsByPriority = [...tabs].sort((a, b) => (a.priority ?? 100) - (b.priority ?? 100))
   const currentKey = tabsByPriority.find(tab => pathname.startsWith(tab.path))?.key
 
-  return <Group justify="space-between" mb="md">
+  return <Group justify="space-between" mb="md" wrap="nowrap">
     <Tabs
       value={currentKey}
       onChange={value => navigate(tabs.find(tab => tab.key === value)?.path ?? '/dashboard/me')}
     >
       <Tabs.List>
-        {tabs.map(tab => <Tabs.Tab key={tab.key} value={tab.key}>{tab.label}</Tabs.Tab>)}
+        {userTabs.map(tab => <Tabs.Tab key={tab.key} value={tab.key} color="blue">
+          {tab.label}
+        </Tabs.Tab>)}
+        {adminTabs.map(tab => <Tabs.Tab key={tab.key} value={tab.key} color="red">
+          {tab.label}
+        </Tabs.Tab>)}
       </Tabs.List>
     </Tabs>
     <Space flex="1" />
