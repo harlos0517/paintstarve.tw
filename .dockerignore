@@ -6,9 +6,11 @@ data/
 node_modules
 **/node_modules
 
-.env
-.env.*
-!.env.example
+# Bare patterns only match at the build context root, not recursively into
+# backend/frontend - confirmed the hard way (these leaked into a prod image).
+**/.env
+**/.env.*
+!**/.env.example
 
 # Regenerated inside the image - platform-specific, don't copy from host.
 backend/generated/prisma
