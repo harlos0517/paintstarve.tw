@@ -8,14 +8,14 @@ import { WorkVerifyStatus } from '@/api/works'
 import ConfirmDeleteButton from '@/components/ConfirmDeleteButton'
 import AdminOnly from '@/components/dashboard/AdminOnly'
 import WorkVerifyStatusBadge from '@/components/dashboard/WorkVerifyStatusBadge'
+import { usePagination } from '@/hooks/usePagination'
 import { useAdminWorks, useDeleteAdminWork, useResolveWorkApproval } from '@/hooks/useWorks'
 
 const DashboardWorksContent = () => {
   const navigate = useNavigate()
   const [title, setTitle] = useState('')
   const [verifyStatus, setVerifyStatus] = useState<WorkVerifyStatus | null>(null)
-  const [page, setPage] = useState(1)
-  const per = 20
+  const { page, setPage, per, totalPages } = usePagination(20)
 
   const filters = {
     title: title || undefined,
@@ -24,7 +24,6 @@ const DashboardWorksContent = () => {
     per,
   }
   const { data, loading, error, refetch } = useAdminWorks(filters)
-  const totalPages = data ? Math.ceil(data.total / per) : 0
 
   const { mutate: resolveApproval } = useResolveWorkApproval()
   const { mutate: deleteWork } = useDeleteAdminWork()
@@ -101,7 +100,7 @@ const DashboardWorksContent = () => {
     </Table>
 
     <Group mt="md" justify="center">
-      <Pagination value={page} onChange={setPage} total={totalPages} />
+      <Pagination value={page} onChange={setPage} total={totalPages(data?.total)} />
     </Group>
   </>
 }

@@ -5,14 +5,14 @@ import { useNavigate } from 'react-router-dom'
 import { CharacterRole } from '@/api/characters'
 import AdminOnly from '@/components/dashboard/AdminOnly'
 import { useAdminCharacterList } from '@/hooks/useCharacters'
+import { usePagination } from '@/hooks/usePagination'
 
 const DashboardCharactersContent = () => {
   const navigate = useNavigate()
   const [name, setName] = useState('')
   const [role, setRole] = useState<CharacterRole | null>(null)
   const [verified, setVerified] = useState<string | null>(null)
-  const [page, setPage] = useState(1)
-  const per = 20
+  const { page, setPage, per, totalPages } = usePagination(20)
 
   const filters = {
     name: name || undefined,
@@ -22,7 +22,6 @@ const DashboardCharactersContent = () => {
     per,
   }
   const { data, loading, error } = useAdminCharacterList(filters)
-  const totalPages = data ? Math.ceil(data.total / per) : 0
 
   return <>
     <Title order={2} mb="md">角色管理</Title>
@@ -77,7 +76,7 @@ const DashboardCharactersContent = () => {
     </Table>
 
     <Group mt="md" justify="center">
-      <Pagination value={page} onChange={setPage} total={totalPages} />
+      <Pagination value={page} onChange={setPage} total={totalPages(data?.total)} />
     </Group>
   </>
 }

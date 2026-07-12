@@ -15,6 +15,7 @@ import { useState } from 'react'
 
 import AspectRatioViewControl from '@/components/AspectRatioViewControl'
 import WorkListCard from '@/components/WorkListCard'
+import { usePagination } from '@/hooks/usePagination'
 import { usePublicWorks, usePublicWorkTags } from '@/hooks/useWorks'
 import { ASPECT_RATIO_BY_VIEW, BaseAspectRatioView } from '@/lib/aspectRatioViews'
 
@@ -23,10 +24,8 @@ const VIEWS: BaseAspectRatioView[] = ['16:9', '4:3', '1:1', '3:4', '9:16']
 const Works = () => {
   const [title, setTitle] = useState('')
   const [tag, setTag] = useState<string | null>(null)
-  const [page, setPage] = useState(1)
-  const per = 18
+  const { page, setPage, per, totalPages } = usePagination(18)
   const [view, setView] = useState<BaseAspectRatioView>('1:1')
-
 
   const { data: tags } = usePublicWorkTags()
 
@@ -37,7 +36,6 @@ const Works = () => {
     per,
   }
   const { data, loading, error } = usePublicWorks(filters)
-  const totalPages = data ? Math.ceil(data.total / per) : 0
 
   return <Container p="md" size="1440px">
     <Stack>
@@ -76,7 +74,7 @@ const Works = () => {
         </SimpleGrid>}
 
       <Group justify="center">
-        <Pagination value={page} onChange={setPage} total={totalPages} />
+        <Pagination value={page} onChange={setPage} total={totalPages(data?.total)} />
       </Group>
     </Stack>
   </Container>

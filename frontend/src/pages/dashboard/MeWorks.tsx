@@ -1,18 +1,16 @@
 import { Alert, Button, Group, Pagination, Table, Title } from '@mantine/core'
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import ConfirmDeleteButton from '@/components/ConfirmDeleteButton'
 import WorkVerifyStatusBadge from '@/components/dashboard/WorkVerifyStatusBadge'
+import { usePagination } from '@/hooks/usePagination'
 import { useDeleteMeWork, useMeWorks } from '@/hooks/useWorks'
 
 const DashboardMeWorks = () => {
   const navigate = useNavigate()
-  const [page, setPage] = useState(1)
-  const per = 20
+  const { page, setPage, per, totalPages } = usePagination(20)
 
   const { data, loading, error, refetch } = useMeWorks({ page, per })
-  const totalPages = data ? Math.ceil(data.total / per) : 0
 
   const { mutate: deleteWork } = useDeleteMeWork()
 
@@ -62,7 +60,7 @@ const DashboardMeWorks = () => {
     </Table>
 
     <Group mt="md" justify="center">
-      <Pagination value={page} onChange={setPage} total={totalPages} />
+      <Pagination value={page} onChange={setPage} total={totalPages(data?.total)} />
     </Group>
   </>
 }

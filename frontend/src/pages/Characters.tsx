@@ -21,6 +21,7 @@ import { useState } from 'react'
 import { CharacterRole } from '@/api/characters'
 import CharacterListCard from '@/components/CharacterListCard'
 import { usePublicCharacterList } from '@/hooks/useCharacters'
+import { usePagination } from '@/hooks/usePagination'
 
 const Characters = () => {
   const [filterExpanded, { toggle: toggleFilter }] = useDisclosure(false)
@@ -30,10 +31,7 @@ const Characters = () => {
   const [year, setYear] = useState<number | null>(null)
   const [studentClass, setStudentClass] = useState<string | null>(null)
   const [verified, setVerified] = useState(false)
-  const [page, setPage] = useState(1)
-  const [per, setPer] = useState(18)
-
-  const resetPage = () => setPage(1)
+  const { page, setPage, per, setPer, resetPage, totalPages } = usePagination(18)
 
   const filters = {
     name: name || undefined,
@@ -45,7 +43,6 @@ const Characters = () => {
     per,
   }
   const { data, loading, error } = usePublicCharacterList(filters)
-  const totalPages = data ? Math.ceil(data.total / per) : 0
 
   return <Container p="md" size="1440px">
     <Stack>
@@ -104,7 +101,7 @@ const Characters = () => {
       {Boolean(error) && <Alert color="red">無法載入師生資料。</Alert>}
 
       <Group align="end" justify="space-between" w="100%">
-        <Pagination value={page} onChange={setPage} total={totalPages} />
+        <Pagination value={page} onChange={setPage} total={totalPages(data?.total)} />
         <Box></Box>
         <Select
           label="每頁顯示"
@@ -128,7 +125,7 @@ const Characters = () => {
           ))}
         </SimpleGrid>}
 
-      <Pagination value={page} onChange={setPage} total={totalPages} />
+      <Pagination value={page} onChange={setPage} total={totalPages(data?.total)} />
     </Stack>
   </Container>
 }

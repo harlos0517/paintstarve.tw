@@ -18,6 +18,7 @@ import { useState } from 'react'
 
 import { useMeImages, usePresignImageUpload } from '@/hooks/useImages'
 import { useImageUpload } from '@/hooks/useImageUpload'
+import { usePagination } from '@/hooks/usePagination'
 
 export interface ImageSelectorImage {
   id: string
@@ -36,18 +37,16 @@ interface ImageSelectorModalProps {
 const ImageSelectorModal = ({ selected, onChange, max }: ImageSelectorModalProps) => {
   const [opened, { open, close }] = useDisclosure(false)
   const [pending, setPending] = useState<Map<string, string>>(new Map())
-  const [page, setPage] = useState(1)
-  const per = 12
+  const { page, setPage, per, resetPage, totalPages } = usePagination(12)
 
   const { data, loading, error, refetch } = useMeImages({ page, per })
-  const totalPages = data ? Math.ceil(data.total / per) : 0
   const images = data?.images.filter(image => !image.idCardForCharacterId) ?? []
 
   const { mutate: presignUpload, loading: uploading } = usePresignImageUpload()
 
   const handleOpen = () => {
     setPending(new Map(selected.map(image => [image.id, image.url])))
-    setPage(1)
+    resetPage()
     open()
   }
 
@@ -69,7 +68,7 @@ const ImageSelectorModal = ({ selected, onChange, max }: ImageSelectorModalProps
         next.set(imageId, publicUrl)
         return next
       })
-      setPage(1)
+      resetPage()
       refetch()
     },
   )
@@ -135,7 +134,7 @@ const ImageSelectorModal = ({ selected, onChange, max }: ImageSelectorModalProps
         </SimpleGrid>
 
         <Group justify="center">
-          <Pagination value={page} onChange={setPage} total={totalPages} />
+          <Pagination value={page} onChange={setPage} total={totalPages(data?.total)} />
         </Group>
 
         <Group justify="flex-end">

@@ -19,6 +19,7 @@ import ConfirmDeleteButton from '@/components/ConfirmDeleteButton'
 import ImagePreview from '@/components/ImagePreview'
 import { useDeleteImage, useMeImages, usePresignImageUpload } from '@/hooks/useImages'
 import { useImageUpload } from '@/hooks/useImageUpload'
+import { usePagination } from '@/hooks/usePagination'
 import { ASPECT_RATIO_BY_VIEW as BASE_ASPECT_RATIO_BY_VIEW } from '@/lib/aspectRatioViews'
 import { TrashIcon } from '@phosphor-icons/react'
 
@@ -33,12 +34,10 @@ type ImageView = keyof typeof ASPECT_RATIO_BY_VIEW
 const VIEWS: ImageView[] = ['16:9', '4:3', '1:1', '3:4', '證件', '9:16']
 
 const DashboardMeImages = () => {
-  const [page, setPage] = useState(1)
-  const per = 24
+  const { page, setPage, per, totalPages } = usePagination(24)
   const [view, setView] = useState<ImageView>('1:1')
 
   const { data, loading, error, refetch } = useMeImages({ page, per })
-  const totalPages = data ? Math.ceil(data.total / per) : 0
 
   const { mutate: presignUpload, loading: uploading } = usePresignImageUpload()
   const { mutate: deleteImage } = useDeleteImage()
@@ -91,7 +90,7 @@ const DashboardMeImages = () => {
     </SimpleGrid>
 
     <Group justify="center">
-      <Pagination value={page} onChange={setPage} total={totalPages} />
+      <Pagination value={page} onChange={setPage} total={totalPages(data?.total)} />
     </Group>
   </Stack>
 }
