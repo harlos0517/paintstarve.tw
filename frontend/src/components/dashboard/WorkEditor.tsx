@@ -24,6 +24,7 @@ import { MeWorkUpdateInput, WorkDetail } from '@/api/works'
 import ImageSelectorModal, { ImageSelectorImage } from '@/components/dashboard/ImageSelectorModal'
 import WorkVerifyStatusBadge from '@/components/dashboard/WorkVerifyStatusBadge'
 import ImagePreview from '@/components/ImagePreview'
+import { useDualModeMutation, useDualModeQuery } from '@/hooks/useDualMode'
 import {
   useAdminWork,
   useCreateMeWork,
@@ -49,7 +50,6 @@ interface WorkFormProps {
 
 const WorkForm = ({ work, mode, refetch }: WorkFormProps) => {
   const navigate = useNavigate()
-  const isAdmin = mode === 'admin'
 
   const [title, setTitle] = useState(work?.title ?? '')
   const [description, setDescription] = useState(work?.description ?? '')
@@ -82,9 +82,10 @@ const WorkForm = ({ work, mode, refetch }: WorkFormProps) => {
   }
 
   const { mutate: createWork, loading: creating } = useCreateMeWork()
-  const { mutate: updateMeWorkMutate, loading: meSaving } = useUpdateMeWork()
-  const { mutate: updateAdminWorkMutate, loading: adminSaving } = useUpdateAdminWork()
-  const saving = creating || (isAdmin ? adminSaving : meSaving)
+  const { mutate: updateWork, loading: updating } = useDualModeMutation(
+    mode, useUpdateMeWork, useUpdateAdminWork,
+  )
+  const saving = creating || updating
 
   const [saved, setSaved] = useState(false)
   const [saveError, setSaveError] = useState<string>()
@@ -124,8 +125,7 @@ const WorkForm = ({ work, mode, refetch }: WorkFormProps) => {
         return
       }
 
-      const update = isAdmin ? updateAdminWorkMutate : updateMeWorkMutate
-      await update(work.id, input)
+      await updateWork(work.id, input)
       setSaved(true)
       refetch?.()
     } catch(err) {
@@ -230,9 +230,9 @@ interface WorkEditorProps {
 }
 
 const WorkEditor = ({ workId, mode }: WorkEditorProps) => {
-  const meQuery = useMeWork(mode === 'me' ? workId : undefined)
-  const adminQuery = useAdminWork(mode === 'admin' ? workId : undefined)
-  const { data: work, loading, error, refetch } = mode === 'admin' ? adminQuery : meQuery
+  const { data: work, loading, error, refetch } = useDualModeQuery(
+    mode, workId, useMeWork, useAdminWork,
+  )
 
   if (!workId) return <WorkForm mode={mode} />
 

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 
-interface UseQueryResult<T> {
+export interface UseQueryResult<T> {
   data: T | undefined
   loading: boolean
   error: unknown
@@ -37,7 +37,7 @@ export function useQuery<T>(fn: () => Promise<T>, deps: unknown[]): UseQueryResu
   return { data, loading, error, refetch }
 }
 
-interface UseMutationResult<Args extends unknown[], T> {
+export interface UseMutationResult<Args extends unknown[], T> {
   mutate: (...args: Args) => Promise<T>
   loading: boolean
   error: unknown

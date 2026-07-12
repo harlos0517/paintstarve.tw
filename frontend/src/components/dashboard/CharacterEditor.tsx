@@ -1,3 +1,4 @@
+import { Carousel } from '@mantine/carousel'
 import {
   ActionIcon,
   Alert,
@@ -16,6 +17,7 @@ import {
   Textarea,
   Title,
 } from '@mantine/core'
+import { CheckIcon, CopyIcon } from '@phosphor-icons/react'
 import { useState } from 'react'
 
 import { getErrorMessage } from '@/api/backendClient'
@@ -32,8 +34,7 @@ import {
   useUpdateAdminCharacter,
   useUpdateMeCharacter,
 } from '@/hooks/useCharacters'
-import { Carousel } from '@mantine/carousel'
-import { CheckIcon, CopyIcon } from '@phosphor-icons/react'
+import { useDualModeQuery } from '@/hooks/useDualMode'
 
 interface CharacterFormProps {
   character: CharacterDetail
@@ -306,9 +307,9 @@ const splitBirthday = (birthday: string | null) => {
 }
 
 const CharacterEditor = ({ characterId, mode }: CharacterEditorProps) => {
-  const adminQuery = useAdminCharacter(characterId)
-  const meQuery = useMeCharacter(characterId)
-  const { data: character, loading, error, refetch } = mode === 'admin' ? adminQuery : meQuery
+  const { data: character, loading, error, refetch } = useDualModeQuery(
+    mode, characterId, useMeCharacter, useAdminCharacter,
+  )
 
   if (error) return <Alert color="red">無法載入角色資料。</Alert>
   if (!loading && !character) return <Alert color="red">找不到此角色。</Alert>
