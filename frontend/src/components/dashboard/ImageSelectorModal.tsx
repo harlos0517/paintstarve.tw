@@ -16,9 +16,8 @@ import { useDisclosure } from '@mantine/hooks'
 import { CheckCircleIcon } from '@phosphor-icons/react'
 import { useState } from 'react'
 
-import { getErrorMessage } from '@/api/backendClient'
 import { useMeImages, usePresignImageUpload } from '@/hooks/useImages'
-import { uploadImageFile } from '@/lib/uploadImage'
+import { useImageUpload } from '@/hooks/useImageUpload'
 
 export interface ImageSelectorImage {
   id: string
@@ -45,8 +44,6 @@ const ImageSelectorModal = ({ selected, onChange, max }: ImageSelectorModalProps
   const images = data?.images.filter(image => !image.idCardForCharacterId) ?? []
 
   const { mutate: presignUpload, loading: uploading } = usePresignImageUpload()
-  const [file, setFile] = useState<File | null>(null)
-  const [uploadError, setUploadError] = useState<string>()
 
   const handleOpen = () => {
     setPending(new Map(selected.map(image => [image.id, image.url])))
@@ -63,13 +60,9 @@ const ImageSelectorModal = ({ selected, onChange, max }: ImageSelectorModalProps
     })
   }
 
-  const handleUpload = async(selectedFile: File | null) => {
-    setFile(selectedFile)
-    if (!selectedFile) return
-    setUploadError(undefined)
-    try {
-      const { imageId, publicUrl } = await uploadImageFile(selectedFile, presignUpload)
-      setFile(null)
+  const { file, error: uploadError, handleUpload } = useImageUpload(
+    presignUpload,
+    ({ imageId, publicUrl }) => {
       setPending(prev => {
         if (prev.size >= max) return prev
         const next = new Map(prev)
@@ -78,10 +71,8 @@ const ImageSelectorModal = ({ selected, onChange, max }: ImageSelectorModalProps
       })
       setPage(1)
       refetch()
-    } catch(err) {
-      setUploadError(getErrorMessage(err))
-    }
-  }
+    },
+  )
 
   const handleConfirm = () => {
     onChange(Array.from(pending.entries()).map(([id, url]) => ({ id, url })))

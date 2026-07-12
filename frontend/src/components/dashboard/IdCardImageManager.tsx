@@ -22,7 +22,7 @@ import {
   usePresignCharacterIdCardImageUpload,
   useUpdateCharacterIdCardDisplay,
 } from '@/hooks/useImages'
-import { uploadImageFile } from '@/lib/uploadImage'
+import { useImageUpload } from '@/hooks/useImageUpload'
 
 interface IdCardImageManagerProps {
   character: CharacterDetail
@@ -39,39 +39,31 @@ const IdCardImageManager = ({ character, refetch }: IdCardImageManagerProps) => 
   const { mutate: deleteImage } = useDeleteImage()
   const { mutate: updateDisplay, loading: updatingDisplay } = useUpdateCharacterIdCardDisplay()
 
-  const [file, setFile] = useState<File | null>(null)
-  const [error, setError] = useState<string>()
+  const { file, error: uploadError, handleUpload } = useImageUpload(
+    contentType => presignUpload(character.id, contentType),
+    refetch,
+  )
 
-  const handleUpload = async(selected: File | null) => {
-    setFile(selected)
-    if (!selected) return
-    setError(undefined)
-    try {
-      await uploadImageFile(selected, contentType => presignUpload(character.id, contentType))
-      setFile(null)
-      refetch()
-    } catch(err) {
-      setError(getErrorMessage(err))
-    }
-  }
+  const [actionError, setActionError] = useState<string>()
+  const error = actionError ?? uploadError
 
   const handleSetPrimary = async(imageId: string) => {
-    setError(undefined)
+    setActionError(undefined)
     try {
       await updateDisplay(character.id, { primaryIdCardImageId: imageId })
       refetch()
     } catch(err) {
-      setError(getErrorMessage(err))
+      setActionError(getErrorMessage(err))
     }
   }
 
   const handleDisplayModeChange = async(value: string) => {
-    setError(undefined)
+    setActionError(undefined)
     try {
       await updateDisplay(character.id, { idCardDisplayMode: value as 'SINGLE' | 'CAROUSEL' })
       refetch()
     } catch(err) {
-      setError(getErrorMessage(err))
+      setActionError(getErrorMessage(err))
     }
   }
 

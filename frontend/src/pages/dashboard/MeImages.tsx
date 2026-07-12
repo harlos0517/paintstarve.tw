@@ -14,13 +14,12 @@ import {
 } from '@mantine/core'
 import { useState } from 'react'
 
-import { getErrorMessage } from '@/api/backendClient'
 import AspectRatioViewControl from '@/components/AspectRatioViewControl'
 import ConfirmDeleteButton from '@/components/ConfirmDeleteButton'
 import ImagePreview from '@/components/ImagePreview'
 import { useDeleteImage, useMeImages, usePresignImageUpload } from '@/hooks/useImages'
+import { useImageUpload } from '@/hooks/useImageUpload'
 import { ASPECT_RATIO_BY_VIEW as BASE_ASPECT_RATIO_BY_VIEW } from '@/lib/aspectRatioViews'
-import { uploadImageFile } from '@/lib/uploadImage'
 import { TrashIcon } from '@phosphor-icons/react'
 
 import styles from './MeImages.module.sass'
@@ -44,22 +43,10 @@ const DashboardMeImages = () => {
   const { mutate: presignUpload, loading: uploading } = usePresignImageUpload()
   const { mutate: deleteImage } = useDeleteImage()
 
-  const [file, setFile] = useState<File | null>(null)
-  const [uploadError, setUploadError] = useState<string>()
-
-  const handleUpload = async(selected: File | null) => {
-    setFile(selected)
-    if (!selected) return
-    setUploadError(undefined)
-    try {
-      await uploadImageFile(selected, presignUpload)
-      setFile(null)
-      setPage(1)
-      refetch()
-    } catch(err) {
-      setUploadError(getErrorMessage(err))
-    }
-  }
+  const { file, error: uploadError, handleUpload } = useImageUpload(presignUpload, () => {
+    setPage(1)
+    refetch()
+  })
 
   return <Stack>
     <Title order={2}>我的圖片</Title>
