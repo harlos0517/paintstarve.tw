@@ -65,7 +65,7 @@ const WorkListCard = ({ aspectRatio = 1, ...work }: WorkListCardProps) => {
             delay={4000}
             aspectRatio={aspectRatio}
           />
-          : coverUrl && <Image src={coverUrl} h="20rem" fit="contain" radius="sm" />}
+          : coverUrl && <Image src={coverUrl} fit="contain" radius="sm" />}
 
         <Text size="sm" c="dimmed">by {work.author.name}</Text>
 

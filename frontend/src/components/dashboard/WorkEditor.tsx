@@ -148,16 +148,19 @@ const WorkForm = ({ work, mode, refetch }: WorkFormProps) => {
       onChange={e => setDescription(e.currentTarget.value)}
     />
     <TextInput
-      label="外部連結" placeholder="例如原始貼文網址" value={link}
+      label="外部連結" placeholder="網址" value={link}
+      description="可以是你的推文連結、YouTube 影片連結等等"
       onChange={e => setLink(e.currentTarget.value)}
     />
     <TagsInput
       label="標籤" value={tagNames} onChange={setTagNames}
+      description="不需 # 字號，可以放置事件標籤、班級標籤、或是其他任何你想要的標籤。"
       placeholder="輸入後按 Enter 新增標籤"
     />
     <MultiSelect
       label="出場角色"
       placeholder="搜尋角色名稱"
+      description="標註作品中出現的角色。若作品中有自己，請記得標註自己。"
       data={characterOptions}
       value={characterIds}
       onChange={value => setCharacterIds(value.slice(0, MAX_CHARACTERS_PER_WORK))}
