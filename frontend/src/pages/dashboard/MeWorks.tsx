@@ -1,15 +1,10 @@
-import { Alert, Badge, Button, Group, Pagination, Table, Title } from '@mantine/core'
+import { Alert, Button, Group, Pagination, Table, Title } from '@mantine/core'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import ConfirmDeleteButton from '@/components/ConfirmDeleteButton'
+import WorkVerifyStatusBadge from '@/components/dashboard/WorkVerifyStatusBadge'
 import { useDeleteMeWork, useMeWorks } from '@/hooks/useWorks'
-
-const VERIFY_STATUS_BADGE = {
-  PENDING: { color: 'yellow', label: '審核中' },
-  VERIFIED: { color: 'green', label: '已通過' },
-  REJECTED: { color: 'red', label: '已退回' },
-} as const
 
 const DashboardMeWorks = () => {
   const navigate = useNavigate()
@@ -43,29 +38,26 @@ const DashboardMeWorks = () => {
         </Table.Tr>
       </Table.Thead>
       <Table.Tbody>
-        {!loading && data?.works.map(work => {
-          const badge = VERIFY_STATUS_BADGE[work.verifyStatus]
-          return <Table.Tr key={work.id}>
-            <Table.Td
-              style={{ cursor: 'pointer' }}
-              onClick={() => navigate(`/dashboard/me/works/${work.id}`)}
+        {!loading && data?.works.map(work => <Table.Tr key={work.id}>
+          <Table.Td
+            style={{ cursor: 'pointer' }}
+            onClick={() => navigate(`/dashboard/me/works/${work.id}`)}
+          >
+            {work.title}
+          </Table.Td>
+          <Table.Td>
+            <WorkVerifyStatusBadge status={work.verifyStatus} variant="light" />
+          </Table.Td>
+          <Table.Td>{work.show ? '是' : '否'}</Table.Td>
+          <Table.Td>
+            <ConfirmDeleteButton
+              onConfirm={async() => { await deleteWork(work.id); refetch() }}
+              message="確定要刪除此作品嗎？此操作無法復原。"
             >
-              {work.title}
-            </Table.Td>
-            <Table.Td>
-              <Badge color={badge.color} variant="light">{badge.label}</Badge>
-            </Table.Td>
-            <Table.Td>{work.show ? '是' : '否'}</Table.Td>
-            <Table.Td>
-              <ConfirmDeleteButton
-                onConfirm={async() => { await deleteWork(work.id); refetch() }}
-                message="確定要刪除此作品嗎？此操作無法復原。"
-              >
-                <Button size="xs" variant="outline" color="red">刪除</Button>
-              </ConfirmDeleteButton>
-            </Table.Td>
-          </Table.Tr>
-        })}
+              <Button size="xs" variant="outline" color="red">刪除</Button>
+            </ConfirmDeleteButton>
+          </Table.Td>
+        </Table.Tr>)}
       </Table.Tbody>
     </Table>
 

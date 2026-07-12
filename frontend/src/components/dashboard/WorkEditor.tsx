@@ -1,7 +1,6 @@
 import {
   ActionIcon,
   Alert,
-  Badge,
   Box,
   Button,
   Group,
@@ -21,8 +20,9 @@ import { useNavigate } from 'react-router-dom'
 
 import { getErrorMessage } from '@/api/backendClient'
 import { listPublicCharacters } from '@/api/characters'
-import { MeWorkUpdateInput, WorkDetail, WorkVerifyStatus } from '@/api/works'
+import { MeWorkUpdateInput, WorkDetail } from '@/api/works'
 import ImageSelectorModal, { ImageSelectorImage } from '@/components/dashboard/ImageSelectorModal'
+import WorkVerifyStatusBadge from '@/components/dashboard/WorkVerifyStatusBadge'
 import ImagePreview from '@/components/ImagePreview'
 import {
   useAdminWork,
@@ -35,12 +35,6 @@ import { ArrowDownIcon, ArrowUpIcon, CheckIcon, TrashIcon } from '@phosphor-icon
 
 const MAX_IMAGES_PER_WORK = 10
 const MAX_CHARACTERS_PER_WORK = 50
-
-const VERIFY_STATUS_BADGE: Record<WorkVerifyStatus, { color: string, label: string }> = {
-  PENDING: { color: 'yellow', label: '審核中' },
-  VERIFIED: { color: 'green', label: '已通過' },
-  REJECTED: { color: 'red', label: '已退回' },
-}
 
 interface CharacterOption {
   value: string
@@ -139,12 +133,10 @@ const WorkForm = ({ work, mode, refetch }: WorkFormProps) => {
     }
   }
 
-  const statusBadge = work && VERIFY_STATUS_BADGE[work.verifyStatus]
-
   return <Stack>
     <Group justify="space-between">
       <Title order={2}>{work ? work.title : '新增作品'}</Title>
-      {statusBadge && <Badge color={statusBadge.color}>{statusBadge.label}</Badge>}
+      {work && <WorkVerifyStatusBadge status={work.verifyStatus} />}
     </Group>
 
     <TextInput
