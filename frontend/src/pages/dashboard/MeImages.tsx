@@ -7,7 +7,6 @@ import {
   Group,
   Image,
   Pagination,
-  SegmentedControl,
   SimpleGrid,
   Stack,
   Text,
@@ -16,24 +15,23 @@ import {
 import { useState } from 'react'
 
 import { getErrorMessage } from '@/api/backendClient'
+import AspectRatioViewControl from '@/components/AspectRatioViewControl'
 import ConfirmDeleteButton from '@/components/ConfirmDeleteButton'
 import ImagePreview from '@/components/ImagePreview'
 import { useDeleteImage, useMeImages, usePresignImageUpload } from '@/hooks/useImages'
+import { ASPECT_RATIO_BY_VIEW as BASE_ASPECT_RATIO_BY_VIEW } from '@/lib/aspectRatioViews'
 import { uploadImageFile } from '@/lib/uploadImage'
 import { TrashIcon } from '@phosphor-icons/react'
 
 import styles from './MeImages.module.sass'
 
 const ASPECT_RATIO_BY_VIEW = {
-  '16:9': 16 / 9,
-  '4:3': 4 / 3,
-  '1:1': 1,
-  '3:4': 3 / 4,
+  ...BASE_ASPECT_RATIO_BY_VIEW,
   '證件': 827 / 1181,
-  '9:16': 9 / 16,
 } as const
 
 type ImageView = keyof typeof ASPECT_RATIO_BY_VIEW
+const VIEWS: ImageView[] = ['16:9', '4:3', '1:1', '3:4', '證件', '9:16']
 
 const DashboardMeImages = () => {
   const [page, setPage] = useState(1)
@@ -83,12 +81,7 @@ const DashboardMeImages = () => {
       <Text size="sm" c="dimmed">尚未上傳任何圖片。</Text>
     )}
 
-    <SegmentedControl
-      value={view}
-      onChange={value => setView(value as ImageView)}
-      data={['16:9', '4:3', '1:1', '3:4', '證件', '9:16']}
-      w="fit-content"
-    />
+    <AspectRatioViewControl views={VIEWS} value={view} onChange={setView} />
 
     <SimpleGrid cols={{ base: 2, sm: 3, md: 4, lg: 6 }}>
       {data?.images.map(image => (

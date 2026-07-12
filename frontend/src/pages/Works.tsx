@@ -6,7 +6,6 @@ import {
   Loader,
   MultiSelect,
   Pagination,
-  SegmentedControl,
   SimpleGrid,
   Stack,
   TextInput,
@@ -14,25 +13,19 @@ import {
 } from '@mantine/core'
 import { useState } from 'react'
 
+import AspectRatioViewControl from '@/components/AspectRatioViewControl'
 import WorkListCard from '@/components/WorkListCard'
 import { usePublicWorks, usePublicWorkTags } from '@/hooks/useWorks'
+import { ASPECT_RATIO_BY_VIEW, BaseAspectRatioView } from '@/lib/aspectRatioViews'
 
-const ASPECT_RATIO_BY_VIEW = {
-  '16:9': 16 / 9,
-  '4:3': 4 / 3,
-  '1:1': 1,
-  '3:4': 3 / 4,
-  '9:16': 9 / 16,
-} as const
-
-type ImageView = keyof typeof ASPECT_RATIO_BY_VIEW
+const VIEWS: BaseAspectRatioView[] = ['16:9', '4:3', '1:1', '3:4', '9:16']
 
 const Works = () => {
   const [title, setTitle] = useState('')
   const [tag, setTag] = useState<string | null>(null)
   const [page, setPage] = useState(1)
   const per = 18
-  const [view, setView] = useState<ImageView>('1:1')
+  const [view, setView] = useState<BaseAspectRatioView>('1:1')
 
 
   const { data: tags } = usePublicWorkTags()
@@ -68,12 +61,7 @@ const Works = () => {
         />
       </Group>
 
-      <SegmentedControl
-        value={view}
-        onChange={value => setView(value as ImageView)}
-        data={['16:9', '4:3', '1:1', '3:4', '9:16']}
-        w="fit-content"
-      />
+      <AspectRatioViewControl views={VIEWS} value={view} onChange={setView} />
 
       {Boolean(error) && <Alert color="red">無法載入作品列表。</Alert>}
 
