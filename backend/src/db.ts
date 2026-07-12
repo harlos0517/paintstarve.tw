@@ -21,11 +21,14 @@ export const Image = prisma.image
 export const Work = prisma.work
 export const WorkImage = prisma.workImage
 export const WorkCharacter = prisma.workCharacter
+export const Tag = prisma.tag
+export const WorkTag = prisma.workTag
 
 export {
   CharacterClaimStatus,
   CharacterRole,
   UserRole,
   UserVerifiedStatus,
+  WorkVerifiedStatus,
 } from '../generated/prisma/enums'
 

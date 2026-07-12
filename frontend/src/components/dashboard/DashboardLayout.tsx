@@ -55,6 +55,7 @@ const NavTabs = ({ isAdmin }: { isAdmin: boolean }) => {
     { key: 'me', label: '我的資料', path: '/dashboard/me' },
     { key: 'me-characters', label: '我的角色', path: '/dashboard/me/characters', priority: 2 },
     { key: 'me-images', label: '我的圖片', path: '/dashboard/me/images', priority: 2.5 },
+    { key: 'me-works', label: '我的作品', path: '/dashboard/me/works', priority: 2.7 },
   ]
 
   const adminTabs = [
@@ -67,6 +68,7 @@ const NavTabs = ({ isAdmin }: { isAdmin: boolean }) => {
     },
     { key: 'users', label: '使用者管理', path: '/dashboard/users' },
     { key: 'character-claims', label: '角色認領申請', path: '/dashboard/character-claims' },
+    { key: 'works', label: '作品審核', path: '/dashboard/works', priority: 3.5 },
   ]
 
   const tabs = isAdmin ? [...userTabs, ...adminTabs] : userTabs

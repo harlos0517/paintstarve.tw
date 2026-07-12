@@ -193,6 +193,7 @@ model Work {
 
   title        String
   description  String?
+  link         String?
   authorId     String
   verifyStatus WorkVerifiedStatus @default(PENDING)
   show         Boolean            @default(true)
@@ -200,13 +201,15 @@ model Work {
   author     User            @relation(fields: [authorId], references: [id])
   images     WorkImage[]
   characters WorkCharacter[]
+  tags       WorkTag[]
 }
 
 model WorkImage {
-  workId  String
-  imageId String
+  workId   String
+  imageId  String
+  position Int    @default(0)
 
-  work  Work  @relation(fields: [workId], references: [id])
+  work  Work  @relation(fields: [workId], references: [id], onDelete: Cascade)
   image Image @relation(fields: [imageId], references: [id])
 
   @@id([workId, imageId])
@@ -216,8 +219,26 @@ model WorkCharacter {
   workId      String
   characterId String
 
-  work      Work      @relation(fields: [workId], references: [id])
+  work      Work      @relation(fields: [workId], references: [id], onDelete: Cascade)
   character Character @relation(fields: [characterId], references: [id])
 
   @@id([workId, characterId])
+}
+
+model Tag {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  name      String   @unique
+
+  works WorkTag[]
+}
+
+model WorkTag {
+  workId String
+  tagId  String
+
+  work Work @relation(fields: [workId], references: [id], onDelete: Cascade)
+  tag  Tag  @relation(fields: [tagId], references: [id])
+
+  @@id([workId, tagId])
 }

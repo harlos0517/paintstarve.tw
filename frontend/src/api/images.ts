@@ -4,6 +4,7 @@ export interface Image {
   id: string
   url: string
   createdAt: string
+  idCardForCharacterId: string | null
 }
 
 export interface ImageListFilters {

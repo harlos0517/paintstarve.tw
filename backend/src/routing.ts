@@ -26,6 +26,19 @@ import mePresignImageUpload from './images/controllers/mePresignImageUpload.js'
 import adminAdjustUserRoles from './users/controllers/adminAdjustUserRoles.js'
 import adminApproveUser from './users/controllers/adminApproveUser.js'
 import adminListUsers from './users/controllers/adminListUsers.js'
+import adminDeleteWork from './works/controllers/adminDeleteWork.js'
+import adminGetWork from './works/controllers/adminGetWork.js'
+import adminListWorks from './works/controllers/adminListWorks.js'
+import adminResolveWorkApproval from './works/controllers/adminResolveWorkApproval.js'
+import adminUpdateWork from './works/controllers/adminUpdateWork.js'
+import meCreateWork from './works/controllers/meCreateWork.js'
+import meDeleteWork from './works/controllers/meDeleteWork.js'
+import meGetWork from './works/controllers/meGetWork.js'
+import meListWorks from './works/controllers/meListWorks.js'
+import meUpdateWork from './works/controllers/meUpdateWork.js'
+import publicGetWork from './works/controllers/publicGetWork.js'
+import publicListWorks from './works/controllers/publicListWorks.js'
+import publicListWorkTags from './works/controllers/publicListWorkTags.js'
 
 const routing: Routing = {
   '/api/v1': {
@@ -33,6 +46,11 @@ const routing: Routing = {
       characters: {
         '/': publicListCharacters,
         ':characterId': publicGetCharacter,
+      },
+      works: {
+        '/': publicListWorks,
+        tags: publicListWorkTags,
+        ':workId': publicGetWork,
       },
     },
     me: {
@@ -65,6 +83,17 @@ const routing: Routing = {
           delete: meDeleteImage,
         },
       },
+      works: {
+        '/': {
+          get: meListWorks,
+          post: meCreateWork,
+        },
+        ':workId': {
+          get: meGetWork,
+          patch: meUpdateWork,
+          delete: meDeleteWork,
+        },
+      },
     },
     admin: {
       users: {
@@ -95,24 +124,19 @@ const routing: Routing = {
           delete: adminDeleteImage,
         },
       },
+      works: {
+        '/': adminListWorks,
+        ':workId': {
+          '/': {
+            get: adminGetWork,
+            patch: adminUpdateWork,
+            delete: adminDeleteWork,
+          },
+          approval: adminResolveWorkApproval,
+        },
+      },
     },
   },
 }
 
 export default routing
-
-// TODO API
-
-// GET /api/v1/public/works - List all works (public) with filter and pagination support
-// GET /api/v1/public/works/:workId - Get work details (public)
-
-// GET /api/v1/me/works - List all works the user has access to
-// GET /api/v1/me/works/:workId - Get work details the user has access to
-// PATCH /api/v1/me/works/:workId - Update work details the user has access to
-// DELETE /api/v1/me/works/:workId - Delete a work the user has access to
-
-// GET /api/v1/admin/works - List all works (admin) with filter and pagination support
-// GET /api/v1/admin/works/:workId - Get work details (admin)
-// PATCH /api/v1/admin/works/:workId - Update any work details
-// PATCH /api/v1/admin/works/:workId/approval - Approve or reject a work
-// DELETE /api/v1/admin/works/:workId - Delete a work

@@ -2,7 +2,7 @@ import { defaultEndpointsFactory } from 'express-zod-api'
 import createHttpError from 'http-errors'
 import { z } from 'zod'
 
-import { Image } from '../../db'
+import { Image, WorkImage } from '../../db'
 import { adminAuthMiddleware } from '../../middlewares/auth'
 import { deleteStoredImage } from '../services/r2Storage'
 
@@ -23,6 +23,11 @@ const adminDeleteImage = defaultEndpointsFactory
       })
 
       if (!image) throw createHttpError(404)
+
+      // WorkImage.imageId is ON DELETE RESTRICT, so deleting an image still
+      // attached to a work would otherwise surface as a raw Prisma FK error.
+      const workImageCount = await WorkImage.count({ where: { imageId: input.imageId } })
+      if (workImageCount > 0) throw createHttpError(409, '此圖片仍被作品使用，請先從作品中移除')
 
       await Image.delete({ where: { id: input.imageId } })
       await deleteStoredImage(image.storageKey)
