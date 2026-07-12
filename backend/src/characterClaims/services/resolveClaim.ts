@@ -21,7 +21,10 @@ export async function resolveClaim(
   })
 
   if (character && character.userId === null) {
-    await tx.character.update({ where: { id: claim.characterId }, data: { userId: claim.userId } })
+    await tx.character.update({
+      where: { id: claim.characterId },
+      data: { userId: claim.userId, verified: true },
+    })
     await tx.characterClaimRequest.update({ where: { id: claim.id }, data: { status: 'APPROVED' } })
     await tx.characterClaimRequest.updateMany({
       where: { characterId: claim.characterId, status: 'PENDING', NOT: { id: claim.id } },

@@ -40,15 +40,9 @@ const adminApproveUser = defaultEndpointsFactory
             continue
           }
 
-          const linked = await resolveClaim(
+          await resolveClaim(
             tx, { id: claim.id, userId, characterId: claim.characterId },
           )
-          if (linked) {
-            await tx.character.update({
-              where: { id: claim.characterId },
-              data: { verified: true },
-            })
-          }
         }
       })
 
