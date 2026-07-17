@@ -59,11 +59,10 @@ const WorkListCard = ({ aspectRatio = 1, ...work }: WorkListCardProps) => {
           ? <PublicCarousel
             items={work.imageUrls.map(url => ({
               key: url,
-              element: <Image src={url} alt={work.title} fit="contain" radius="sm" />,
+              element: <Image src={url} alt={work.title} fit="cover" radius="sm" />,
             }))}
             mode="controlled"
             delay={4000}
-            aspectRatio={aspectRatio}
           />
           : coverUrl && <Image src={coverUrl} fit="contain" radius="sm" />}
 

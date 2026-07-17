@@ -16,7 +16,7 @@ export interface PublicCarouselProps extends CarouselProps {
 // Public-facing: single image (today's behavior) or a carousel through all
 // of them, per the character owner's choice (see IdCardImageManager).
 export const PublicCarousel = (props: PublicCarouselProps) => {
-  const { mode = 'auto', items, delay = 4000, aspectRatio = 1, ...carouselProps } = props
+  const { mode = 'auto', items, delay = 4000, aspectRatio, ...carouselProps } = props
 
   const autoplay = Autoplay({ delay })
 
@@ -39,11 +39,14 @@ export const PublicCarousel = (props: PublicCarouselProps) => {
   >
     {items.map(item => (
       <Carousel.Slide key={item.key}>
-        <AspectRatio ratio={aspectRatio}>
-          <Center h="100%" w="100%">
-            {item.element}
-          </Center>
-        </AspectRatio>
+        {aspectRatio
+          ? <AspectRatio ratio={aspectRatio}>
+            <Center h="100%" w="100%">
+              {item.element}
+            </Center>
+          </AspectRatio>
+          : item.element
+        }
       </Carousel.Slide>
     ))}
   </Carousel>
