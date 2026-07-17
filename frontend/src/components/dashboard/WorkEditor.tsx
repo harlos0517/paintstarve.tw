@@ -7,6 +7,7 @@ import {
   Image,
   LoadingOverlay,
   MultiSelect,
+  Space,
   Stack,
   Switch,
   TagsInput,
@@ -29,6 +30,7 @@ import {
   useAdminWork,
   useCreateMeWork,
   useMeWork,
+  useResolveWorkApproval,
   useUpdateAdminWork,
   useUpdateMeWork,
 } from '@/hooks/useWorks'
@@ -85,7 +87,8 @@ const WorkForm = ({ work, mode, refetch }: WorkFormProps) => {
   const { mutate: updateWork, loading: updating } = useDualModeMutation(
     mode, useUpdateMeWork, useUpdateAdminWork,
   )
-  const saving = creating || updating
+  const { mutate: resolveApproval, loading: approving } = useResolveWorkApproval()
+  const saving = creating || updating || approving
 
   const [saved, setSaved] = useState(false)
   const [saveError, setSaveError] = useState<string>()
@@ -134,9 +137,26 @@ const WorkForm = ({ work, mode, refetch }: WorkFormProps) => {
   }
 
   return <Stack>
-    <Group justify="space-between">
+    <Group>
       <Title order={2}>{work ? work.title : '新增作品'}</Title>
+      <Space flex={1}/>
       {work && <WorkVerifyStatusBadge status={work.verifyStatus} />}
+      {work && work.verifyStatus !== 'VERIFIED' && (
+        <Button
+          size="xs" variant="outline" color="green"
+          onClick={async() => { await resolveApproval(work.id, 'APPROVE'); refetch?.() }}
+        >
+          核准
+        </Button>
+      )}
+      {work && work.verifyStatus !== 'REJECTED' && (
+        <Button
+          size="xs" variant="outline" color="orange"
+          onClick={async() => { await resolveApproval(work.id, 'REJECT'); refetch?.() }}
+        >
+          退回
+        </Button>
+      )}
     </Group>
 
     <TextInput
