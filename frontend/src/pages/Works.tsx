@@ -70,6 +70,7 @@ const Works = () => {
             key={work.id}
             {...work}
             aspectRatio={ASPECT_RATIO_BY_VIEW[view]}
+            onTagClick={t => { setTag(t); setPage(1) }}
           />)}
         </SimpleGrid>}
 

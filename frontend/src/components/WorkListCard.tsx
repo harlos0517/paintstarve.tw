@@ -15,9 +15,10 @@ import PublicCarousel from '@/components/PublicCarousel'
 
 interface WorkListCardProps extends Work {
   aspectRatio?: number
+  onTagClick?: (tag: string) => void
 }
 
-const WorkListCard = ({ aspectRatio = 1, ...work }: WorkListCardProps) => {
+const WorkListCard = ({ aspectRatio = 1, onTagClick, ...work }: WorkListCardProps) => {
   const [opened, { open, close }] = useDisclosure(false)
   const coverUrl = work.imageUrls[0]
 
@@ -46,7 +47,13 @@ const WorkListCard = ({ aspectRatio = 1, ...work }: WorkListCardProps) => {
         {work.tags.length > 0 && (
           <Group gap={4}>
             {work.tags.map(tag => (
-              <Badge key={tag} size="sm" variant="light">{tag}</Badge>
+              <Badge
+                key={tag} size="sm" variant="light"
+                style={onTagClick ? { cursor: 'pointer' } : undefined}
+                onClick={onTagClick && (e => { e.stopPropagation(); onTagClick(tag) })}
+              >
+                {tag}
+              </Badge>
             ))}
           </Group>
         )}
@@ -93,7 +100,13 @@ const WorkListCard = ({ aspectRatio = 1, ...work }: WorkListCardProps) => {
         {work.tags.length > 0 && (
           <Group gap={4}>
             {work.tags.map(tag => (
-              <Badge key={tag} size="sm" variant="light">{tag}</Badge>
+              <Badge
+                key={tag} size="sm" variant="light"
+                style={onTagClick ? { cursor: 'pointer' } : undefined}
+                onClick={onTagClick && (() => { close(); onTagClick(tag) })}
+              >
+                {tag}
+              </Badge>
             ))}
           </Group>
         )}
