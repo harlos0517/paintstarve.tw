@@ -141,7 +141,7 @@ const WorkForm = ({ work, mode, refetch }: WorkFormProps) => {
       <Title order={2}>{work ? work.title : '新增作品'}</Title>
       <Space flex={1}/>
       {work && <WorkVerifyStatusBadge status={work.verifyStatus} />}
-      {work && work.verifyStatus !== 'VERIFIED' && (
+      {mode === 'admin' && work && work.verifyStatus !== 'VERIFIED' && (
         <Button
           size="xs" variant="outline" color="green"
           onClick={async() => { await resolveApproval(work.id, 'APPROVE'); refetch?.() }}
@@ -149,7 +149,7 @@ const WorkForm = ({ work, mode, refetch }: WorkFormProps) => {
           核准
         </Button>
       )}
-      {work && work.verifyStatus !== 'REJECTED' && (
+      {mode === 'admin' && work && work.verifyStatus !== 'REJECTED' && (
         <Button
           size="xs" variant="outline" color="orange"
           onClick={async() => { await resolveApproval(work.id, 'REJECT'); refetch?.() }}
