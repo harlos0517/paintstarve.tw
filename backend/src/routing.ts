@@ -37,6 +37,7 @@ import meGetWork from './works/controllers/meGetWork.js'
 import meListWorks from './works/controllers/meListWorks.js'
 import meUpdateWork from './works/controllers/meUpdateWork.js'
 import publicGetWork from './works/controllers/publicGetWork.js'
+import publicListWorkCharacters from './works/controllers/publicListWorkCharacters.js'
 import publicListWorks from './works/controllers/publicListWorks.js'
 import publicListWorkTags from './works/controllers/publicListWorkTags.js'
 
@@ -50,6 +51,7 @@ const routing: Routing = {
       works: {
         '/': publicListWorks,
         tags: publicListWorkTags,
+        characters: publicListWorkCharacters,
         ':workId': publicGetWork,
       },
     },

@@ -40,6 +40,7 @@ export interface WorkDetail extends Omit<Work, 'author'> {
 export interface WorkListFilters {
   title?: string
   tag?: string
+  characterId?: string
   authorId?: string
   page?: number
   per?: number
@@ -96,6 +97,13 @@ export const listPublicWorkTags = async() => {
     '/api/v1/public/works/tags',
   )
   return data.tags
+}
+
+export const listPublicWorkCharacters = async() => {
+  const { data } = await backendClient.get<{ characters: WorkCharacterStub[] }>(
+    '/api/v1/public/works/characters',
+  )
+  return data.characters
 }
 
 export const listMeWorks = async(filters: AdminWorkListFilters = {}) => {

@@ -9,6 +9,7 @@ import {
   getPublicWork,
   listAdminWorks,
   listMeWorks,
+  listPublicWorkCharacters,
   listPublicWorks,
   listPublicWorkTags,
   MeWorkCreateInput,
@@ -29,6 +30,9 @@ export const usePublicWork = (workId: string) =>
 
 export const usePublicWorkTags = () =>
   useQuery(() => listPublicWorkTags(), [])
+
+export const usePublicWorkCharacters = () =>
+  useQuery(() => listPublicWorkCharacters(), [])
 
 export const useMeWorks = (filters: AdminWorkListFilters = {}) =>
   useQuery(() => listMeWorks(filters), [JSON.stringify(filters)])
