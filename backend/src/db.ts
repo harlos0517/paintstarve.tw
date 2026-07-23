@@ -23,6 +23,7 @@ export const WorkImage = prisma.workImage
 export const WorkCharacter = prisma.workCharacter
 export const Tag = prisma.tag
 export const WorkTag = prisma.workTag
+export const ApiKey = prisma.apiKey
 
 export {
   CharacterClaimStatus,

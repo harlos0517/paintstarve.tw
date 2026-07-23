@@ -8,13 +8,19 @@ import ConfirmModal from '@/components/ConfirmModal'
 export interface ConfirmDeleteButtonProps {
   onConfirm: () => Promise<unknown>
   message?: string
+  title?: string
+  confirmLabel?: string
   children: ReactNode
 }
 
 // Wraps any trigger element (an icon button, a text button, etc.) so
 // clicking it opens a confirmation modal first - owns its own open/loading/
 // error state, so call sites just provide the async action and the trigger.
-const ConfirmDeleteButton = ({ onConfirm, message, children }: ConfirmDeleteButtonProps) => {
+// title/confirmLabel default to ConfirmModal's own "確認刪除"/"刪除" - override
+// them for actions that aren't a literal delete (e.g. revoking an API key).
+const ConfirmDeleteButton = ({
+  onConfirm, message, title, confirmLabel, children,
+}: ConfirmDeleteButtonProps) => {
   const [opened, { open, close }] = useDisclosure(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string>()
@@ -43,6 +49,8 @@ const ConfirmDeleteButton = ({ onConfirm, message, children }: ConfirmDeleteButt
       loading={loading}
       error={error}
       message={message}
+      title={title}
+      confirmLabel={confirmLabel}
     />
   </>
 }

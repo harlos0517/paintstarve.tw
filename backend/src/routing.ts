@@ -1,5 +1,8 @@
 import { type Routing } from 'express-zod-api'
 
+import adminCreateApiKey from './apiKeys/controllers/adminCreateApiKey.js'
+import adminListApiKeys from './apiKeys/controllers/adminListApiKeys.js'
+import adminRevokeApiKey from './apiKeys/controllers/adminRevokeApiKey.js'
 import adminListCharacterClaims from './characterClaims/controllers/adminListCharacterClaims.js'
 import adminResolveCharacterClaim from './characterClaims/controllers/adminResolveCharacterClaim.js'
 import meCreateCharacterClaim from './characterClaims/controllers/meCreateCharacterClaim.js'
@@ -16,6 +19,10 @@ import mePresignIdCardImageUpload from './characters/controllers/mePresignIdCard
 import meUpdateCharacter from './characters/controllers/meUpdateCharacter.js'
 import meUpdateCharacterIdCardDisplay
   from './characters/controllers/meUpdateCharacterIdCardDisplay.js'
+import developerGetCharacter from './characters/controllers/developerGetCharacter.js'
+import developerPresignIdCardImageUpload
+  from './characters/controllers/developerPresignIdCardImageUpload.js'
+import developerUpdateCharacter from './characters/controllers/developerUpdateCharacter.js'
 import publicGetCharacter from './characters/controllers/publicGetCharacter.js'
 import publicListCharacters from './characters/controllers/publicListCharacters.js'
 import adminDeleteImage from './images/controllers/adminDeleteImage.js'
@@ -26,6 +33,7 @@ import mePresignImageUpload from './images/controllers/mePresignImageUpload.js'
 import adminAdjustUserRoles from './users/controllers/adminAdjustUserRoles.js'
 import adminApproveUser from './users/controllers/adminApproveUser.js'
 import adminListUsers from './users/controllers/adminListUsers.js'
+import developerFindUserCharacters from './users/controllers/developerFindUserCharacters.js'
 import adminDeleteWork from './works/controllers/adminDeleteWork.js'
 import adminGetWork from './works/controllers/adminGetWork.js'
 import adminListWorks from './works/controllers/adminListWorks.js'
@@ -41,6 +49,25 @@ import publicListWorkCharacters from './works/controllers/publicListWorkCharacte
 import publicListWorks from './works/controllers/publicListWorks.js'
 import publicListWorkTags from './works/controllers/publicListWorkTags.js'
 
+// Exported separately so developerDocs.ts can build OpenAPI docs for just
+// this subtree, without duplicating the route shape in a second place.
+export const developerRouting: Routing = {
+  characters: {
+    ':characterId': {
+      '/': {
+        get: developerGetCharacter,
+        patch: developerUpdateCharacter,
+      },
+      'id-card-images': {
+        'presign-upload': developerPresignIdCardImageUpload,
+      },
+    },
+  },
+  users: {
+    '/': developerFindUserCharacters,
+  },
+}
+
 const routing: Routing = {
   '/api/v1': {
     public: {
@@ -55,6 +82,7 @@ const routing: Routing = {
         ':workId': publicGetWork,
       },
     },
+    developer: developerRouting,
     me: {
       characters: {
         '/': meListCharacters,
@@ -103,6 +131,15 @@ const routing: Routing = {
         ':userId': {
           approval: adminApproveUser,
           role: adminAdjustUserRoles,
+          'api-keys': {
+            '/': {
+              get: adminListApiKeys,
+              post: adminCreateApiKey,
+            },
+            ':apiKeyId': {
+              delete: adminRevokeApiKey,
+            },
+          },
         },
       },
       characters: {

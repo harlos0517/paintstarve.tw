@@ -1,7 +1,9 @@
+import { apiReference } from '@scalar/express-api-reference'
 import { toNodeHandler } from 'better-auth/node'
 import { createConfig } from 'express-zod-api'
 import createHttpError from 'http-errors'
 
+import { buildDeveloperDocs } from './apiKeys/services/developerDocs'
 import authControllers from './utils/authControllers'
 
 const config = createConfig({
@@ -30,6 +32,17 @@ const config = createConfig({
       next()
     })
     app.all('/api/auth/{*any}', toNodeHandler(authControllers))
+
+    // Developer API docs: raw spec + a Scalar UI to browse/try it, both
+    // public (no API key needed to view - only actual calls require one).
+    const developerDocs = buildDeveloperDocs(config)
+    app.get('/api/v1/developer/openapi.json', (_req, res) => {
+      res.json(developerDocs.getSpec())
+    })
+    app.get('/api/v1/developer/docs', apiReference({
+      url: '/api/v1/developer/openapi.json',
+      pageTitle: 'Paint Starve Developer API',
+    }))
   },
   gracefulShutdown: {
     timeout: 1000,

@@ -56,6 +56,7 @@ model User {
   characterClaims CharacterClaimRequest[]
   uploadedImages  Image[]                 @relation("UserUploadedImages")
   works           Work[]
+  apiKeys         ApiKey[]
 
   // Better Auth required relations
   sessions Session[]
@@ -241,4 +242,24 @@ model WorkTag {
   tag  Tag  @relation(fields: [tagId], references: [id])
 
   @@id([workId, tagId])
+}
+
+model ApiKey {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  userId      String
+  name        String
+  description String?
+
+  keyPrefix String   @unique
+  hashedKey String   @unique
+  scopes    String[]
+
+  lastUsedAt DateTime?
+  lastUsedIp String?
+  expiresAt  DateTime?
+  revokedAt  DateTime?
+
+  user User @relation(fields: [userId], references: [id])
 }

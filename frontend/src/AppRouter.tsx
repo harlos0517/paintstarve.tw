@@ -9,6 +9,7 @@ import {
 import Layout from '@/components/Layout'
 import DashboardLayout from '@/components/dashboard/DashboardLayout'
 import DashboardAdminWorkEdit from '@/pages/dashboard/AdminWorkEdit'
+import DashboardApiKeys from '@/pages/dashboard/ApiKeys'
 import DashboardCharacterClaims from '@/pages/dashboard/CharacterClaims'
 import DashboardCharacterEdit from '@/pages/dashboard/CharacterEdit'
 import DashboardCharacters from '@/pages/dashboard/Characters'
@@ -53,6 +54,7 @@ const router = () => createHashRouter(
         <Route path="character-claims" element={<DashboardCharacterClaims />} />
         <Route path="works" element={<DashboardWorks />} />
         <Route path="works/:workId" element={<DashboardAdminWorkEdit />} />
+        <Route path="api-keys" element={<DashboardApiKeys />} />
       </Route>
     </>,
   ),

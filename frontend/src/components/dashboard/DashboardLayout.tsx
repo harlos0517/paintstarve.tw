@@ -69,6 +69,7 @@ const NavTabs = ({ isAdmin }: { isAdmin: boolean }) => {
     { key: 'users', label: '使用者管理', path: '/dashboard/users' },
     { key: 'character-claims', label: '角色認領申請', path: '/dashboard/character-claims' },
     { key: 'works', label: '作品審核', path: '/dashboard/works', priority: 3.5 },
+    { key: 'api-keys', label: 'API 金鑰', path: '/dashboard/api-keys' },
   ]
 
   const tabs = isAdmin ? [...userTabs, ...adminTabs] : userTabs

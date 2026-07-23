@@ -68,19 +68,35 @@
 - 其中特定頁面（使用者管理、角色管理、CSV 匯入匯出、角色認領審核）才透過 `AdminOnly` 元件限制僅 `role: ADMIN` 可見
 - 命名慣例：泛指「這個區塊/整個後臺殼層」用 `Dashboard*`；泛指「真的需要 ADMIN 權限才能呼叫」用 `Admin*`（例如 `adminAuthMiddleware`、`/api/v1/admin/*`、`useAdminCharacter`、`AdminOnly`）
 
+### 第三方 Developer API
+
+- `/api/v1` 底下除了 `public`/`me`/`admin` 三種範圍，另有 `developer`——專門給第三方串接用，強制要求 `X-API-Key`。`public` 維持完全匿名不變，兩者不共用同一組路由：前端是純 SPA，沒有安全的地方可以藏密鑰，若 `public` 也要求帶 Key，Key 就得寫進打包後的 JS 裡等於公開
+- 目前開放 4 支：
+  - `GET /api/v1/developer/users?email=...`：用 email 找 User，回傳該使用者名下所有角色
+  - `GET /api/v1/developer/characters/:characterId`
+  - `PATCH /api/v1/developer/characters/:characterId`：可寫欄位同 `meUpdateCharacter`（多一個 `cardId`），僅限 `nameEn`/`cardId`/`title`/`unit`/`race`/`major`/`birthday`/`description`/`twitter`
+  - `POST /api/v1/developer/characters/:characterId/id-card-images/presign-upload`：證件照上傳，新照片自動設為主要證件照；`uploadedByUserId` 依角色當下擁有者設定（沿用 CSV 匯入同一套「不歸給操作者」邏輯，見下方「給未來實作的重要提醒」）
+- **`PATCH`／證件照上傳都不檢查角色是否屬於 Key 綁定的使用者，只看 Key 是否帶 `characters:write` scope**——因為 `GET /developer/users?email=` 本來就設計成查任意使用者的角色，寫入若又限制只能改自己會自相矛盾。也就是說任何帶 `characters:write` scope 的 Key 都能改動任一角色的上述欄位，發 Key 時要謹慎；可寫欄位已限縮在非敏感範圍（不含 `name`/`verified`/證件照本身）
+- API Key 由管理員在後臺「API 金鑰」頁面（`/dashboard/api-keys`，`backend` 對應端點在 `admin/users/:userId/api-keys`）核發，只存 `keyPrefix`/`hashedKey`，完整 token 只在建立當下顯示一次
+- Scope：`characters:read`、`characters:write`（`backend/src/apiKeys/services/apiKeyScopes.ts`）
+- Rate limit 依端點分三層、各自獨立計數：讀取 1200/分鐘、寫入 300/分鐘、證件照上傳 60/分鐘（`backend/src/apiKeys/services/developerEndpointsFactory.ts`）
+- OpenAPI 文件即時產生，開發時可直接開 `http://localhost:8088/api/v1/developer/docs`（[Scalar](https://github.com/scalar/scalar) UI，可直接 Try it out；spec 本身在 `GET /api/v1/developer/openapi.json`）
+
 ## 專案結構
 
 ```
 backend/
 ├── src/
-│   ├── characters/           # 角色 CRUD（public/me/admin 三種權限範圍）＋ CSV 匯入匯出
+│   ├── apiKeys/               # API Key 簽發／驗證／Scope／Rate limit（第三方 Developer API 用）
+│   ├── characters/           # 角色 CRUD（public/me/admin/developer 四種權限範圍）＋ CSV 匯入匯出
 │   ├── characterClaims/       # 角色認領申請（提交／撤回／審核）
 │   ├── images/                 # 圖片上傳（presigned URL）／列表／刪除
-│   ├── users/                  # 使用者列表／審核／角色調整（皆為 admin-only）
-│   ├── middlewares/auth.ts    # authenticatedMiddleware / userAuthMiddleware / adminAuthMiddleware
+│   ├── users/                  # 使用者列表／審核／角色調整（皆為 admin-only）＋ developer 的 email 查角色端點
+│   ├── works/                  # 作品／二創 CRUD（public/me/admin 三種權限範圍）＋ 審核／Tag／圖片關聯
+│   ├── middlewares/            # authenticatedMiddleware/userAuthMiddleware/adminAuthMiddleware（auth.ts）、apiKeyAuthMiddleware（apiKeyAuth.ts）
 │   ├── utils/authControllers.ts  # better-auth 設定（Google OAuth、additionalFields）
 │   ├── db.ts                   # Prisma client 與各 model 的具名匯出
-│   ├── config.ts               # express-zod-api 設定（CORS、上傳限制、better-auth 掛載）
+│   ├── config.ts               # express-zod-api 設定（CORS、上傳限制、better-auth 掛載、Developer API 文件頁面）
 │   ├── routing.ts              # 所有路由定義
 │   └── index.ts                # 進入點
 ├── prisma/
@@ -163,7 +179,7 @@ pnpm --filter frontend <script>
 - **調整使用者角色（`adminAdjustUserRoles`）時要考慮「唯一管理員」情境**：目前規則是管理員不能自我降權，避免不小心把自己踢出後臺
 - **`.env.example` 要跟著新增的環境變數一起更新**，否則之後重新 clone/部署會漏設定
 - 角色認領與使用者審核共用 `resolveClaim`/`rejectClaim`，未來如果要再加一個新的觸發點（例如批次核准多個角色），記得繼續共用這份邏輯，不要各自複製一份
-- **Work（作品／二創）功能尚未實作**，`routing.ts` 底部留有規劃中的 API 清單（`public/me/admin` 的 works／images 端點）可參考
+- **`developer/` 的寫入端點（`PATCH characters`、證件照上傳）不比照 `me` 限制擁有者，只看 API Key 的 scope**——因為 `GET /developer/users?email=` 本來就設計成查任意使用者的角色，寫入若又限制只能改自己會自相矛盾。之後新增 `developer` 寫入端點時比照這個信任模型（scope-gated，不是 owner-gated），可寫欄位也要繼續限縮在非敏感欄位
 
 ## 網頁架構計畫
 - 首頁

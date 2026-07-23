@@ -10,6 +10,8 @@ interface UserPickerProps {
   userId?: string | null
   onChange: (userId: string | null) => void
   disabled?: boolean
+  label?: string
+  placeholder?: string
 }
 
 // Type-to-search combobox over admin users, backed by the paginated/name-
@@ -17,11 +19,15 @@ interface UserPickerProps {
 // from the character's own embedded relation (currentUser), not a separate
 // lookup - so this never has to call the admin user API when disabled (e.g.
 // on a non-admin's own character page, where it's shown but not editable).
+// label/placeholder default to the character-ownership wording this was
+// originally built for - override them when reusing this outside that context.
 const UserPicker = ({
   userId,
   currentUser,
   disabled,
   onChange,
+  label = '所屬使用者',
+  placeholder = '尚未認領',
 }: UserPickerProps) => {
   const [options, setOptions] = useState<{ value: string, label: string }[]>([])
   const [userMap, setUserMap] = useState<Record<string, CharacterOwner>>({})
@@ -47,8 +53,8 @@ const UserPicker = ({
   return <Group>
     <Select
       flex={1}
-      label="所屬使用者"
-      placeholder="尚未認領"
+      label={label}
+      placeholder={placeholder}
       disabled={disabled}
       searchable
       clearable
